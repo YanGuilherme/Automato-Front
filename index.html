@@ -6,7 +6,7 @@
     <link rel="stylesheet" href="style.css">
     <script src="scripts.js"></script>
     <link rel="shortcut icon" href="images/128px-Gold_coin_icon.png" type="image/png">
-    <title>Entrada</title>
+    <title>Carro</title>
 </head>
 <body>
     <h1>Pagina inicial</h1>
@@ -20,19 +20,19 @@
             <input type="text" name="entrada2" id="entrada2" placeholder="Digite o preco">
             <br>
             <br>
-            <button type="submit">Enviar</button>
+            <button type="submit" class="butao">Adicionar</button>
         </form>
     </div>
 
     <div class = "borda_div">
             <h2>Exibiçao dos dados</h2>
-            <button onclick="listar()">Listar carros</button>
             <section>
                 <div class="container">
                     <ul id="carros-list">
                     </ul>
                 </div>
             </section>
+            <button class="butao" onclick="listar()">Listar carros</button>
     </div>
 
     <div class="borda_div">
@@ -45,7 +45,17 @@
             <p>Digite o novo preço do carro</p>
             <input type="text" name="entrada_edit3" id="entrada_edit3" placeholder="Digite o preco">
             <br><br>
-            <button type="submit">Enviar</button>
+            <button class="butao" type="submit">Editar</button> 
+        </form>
+    </div>
+
+    <div class="borda_div">
+        <h2>Exclusão de carro</h2>
+        <form id="delete_carro" onsubmit="deletar(event)">
+            <p>Digite o ID do carro a ser apagado</p>
+            <input id="id_delete" type="text" placeholder="Digite o ID">
+            <br><br>
+            <button class="butao" type="submit">Deletar</button> 
         </form>
     </div>
 
