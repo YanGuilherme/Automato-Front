@@ -41,7 +41,7 @@ function listar() {
                 let item = '';
 
                 for (const element of carro) {
-                    item += `<li id="carroItem"> Modelo: ${element.modelo} <br/> Preço: ${element.preco}
+                    item += `<li id="carroItem"> ID: ${element.id} <br/>Modelo: ${element.modelo} <br/> Preço: ${element.preco}
                     </li><br/>`;
                 }
 
@@ -53,4 +53,46 @@ function listar() {
     };
     xhr.open("GET", "http://localhost:8080/findAll", true);
     xhr.send();
+}
+
+function update(event){
+    event.preventDefault();
+
+    let id = document.getElementById('entrada_edit1').value;
+    let modelo = document.getElementById('entrada_edit2').value;
+    let preco = document.getElementById('entrada_edit3').value;
+
+    if(!id){
+        alert("Por favor, fornece o ID do carro que deseja alterar.");
+        return;
+    }
+
+    const xhr = new XMLHttpRequest();
+
+
+    xhr.open('PUT',`http://localhost:8080/update/${id}`,true);
+    xhr.setRequestHeader('Content-Type','application/json');
+
+    xhr.onreadystatechange = function(){
+        if(xhr.readyState == 4){ //requisicao pronta
+            if(xhr.status == 200){ //retornando ok
+                console.log("Carro atualizado.");
+                listar(); // ja chama o metodo listar para ver como ficou a atualizacao
+            }else{
+                console.error('Erro ao atualizar o carro', xhr.responseText);
+                
+            }
+        }
+    };
+    const dadosCarro = {
+        modelo: modelo,
+        preco: preco
+    };
+
+    xhr.send();
+
+    document.getElementById('entrada_edit1').value = '';
+    document.getElementById('entrada_edit2').value = '';
+    document.getElementById('entrada_edit3').value = '';
+
 }
