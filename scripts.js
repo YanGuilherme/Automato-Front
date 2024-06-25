@@ -2,7 +2,7 @@ function enviarDados(event){
     event.preventDefault();
     const modelo = document.getElementById('entrada1').value; //colocando os dados em variaveis js
     const preco = document.getElementById('entrada2').value;
-    
+    const id = '';
     const xhr = new XMLHttpRequest();
     xhr.open('POST', 'http://localhost:8080/create', true); //metodo post no endpoit adicionarCarro
     xhr.setRequestHeader('Content-Type', 'application/json');
@@ -15,7 +15,8 @@ function enviarDados(event){
         carro: [
             {
                 modelo: modelo,
-                preco: preco
+                preco: preco,
+                id: id
             }
         ]
     };
@@ -24,7 +25,7 @@ function enviarDados(event){
     xhr.send(JSON.stringify(dadosCarro)); //enviando requisiçoes
 
     document.getElementById('entrada1').value = '';
-    document.getElementById('entrada2').value = ''; //liumpando entrada
+    document.getElementById('entrada2').value = ''; //limpando entrada
 }
 function listar() {
     const xhr = new XMLHttpRequest();

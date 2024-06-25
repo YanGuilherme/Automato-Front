@@ -5,12 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
     <script src="scripts.js"></script>
+    <link rel="shortcut icon" href="images/128px-Gold_coin_icon.png" type="image/png">
     <title>Entrada</title>
 </head>
 <body>
     <h1>Pagina inicial</h1>
 
-    <div id="entrada_dados" class="div_teste">
+    <div id="entrada_dados" class="borda_div">
         <h2>Entrada de dados</h2>
         <form id="carForm" onsubmit="enviarDados(event)">
             <p>Digite o modelo do carro</p>
@@ -22,26 +23,33 @@
             <button type="submit">Enviar</button>
         </form>
     </div>
-        <div class = "div_teste">
+
+    <div class = "borda_div">
             <h2>Exibiçao dos dados</h2>
             <button onclick="listar()">Listar carros</button>
             <section>
                 <div class="container">
-                    <div class = "row">
-                        <div class="col">
-                            <ul id="carros-list">
-
-                            </ul>
-                        </div>
-                    </div>
-                    
+                    <ul id="carros-list">
+                    </ul>
                 </div>
             </section>
-        </div>
-
-    <div>
-
     </div>
+
+    <div class="borda_div">
+        <h2>Edição dos dados</h2>
+        <form id="edit_form" onsubmit="update(event)">
+            <p>Digite o ID do carro</p>
+            <input type="number" name="entrada_edit1" id="entrada_edit1" placeholder="Digite o ID">
+            <p>Digite o novo modelo do carro</p>
+            <input type="text" name="entrada_edit2" id="entrada_edit2" placeholder="Digite o modelo">
+            <p>Digite o novo preço do carro</p>
+            <input type="text" name="entrada_edit3" id="entrada_edit3" placeholder="Digite o preco">
+            <br><br>
+            <button type="submit">Enviar</button>
+        </form>
+    </div>
+
+
 
 
 </body>
