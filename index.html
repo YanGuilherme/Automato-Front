@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <script src="scripts.js"></script>
+    <title>Entrada</title>
+</head>
+<body>
+    <h1>Pagina inicial</h1>
+
+    <div id="entrada_dados" class="div_teste">
+        <h2>Entrada de dados</h2>
+        <form id="carForm" onsubmit="enviarDados(event)">
+            <p>Digite o modelo do carro</p>
+            <input type="text" name="entrada1" id="entrada1" placeholder="Digite o modelo">
+            <p>Digite o preco do carro</p>
+            <input type="text" name="entrada2" id="entrada2" placeholder="Digite o preco">
+            <br>
+            <br>
+            <button type="submit">Enviar</button>
+        </form>
+    </div>
+        <div class = "div_teste">
+            <h2>Exibiçao dos dados</h2>
+            <button onclick="listar()">Listar carros</button>
+            <section>
+                <div class="container">
+                    <div class = "row">
+                        <div class="col">
+                            <ul id="carros-list">
+
+                            </ul>
+                        </div>
+                    </div>
+                    
+                </div>
+            </section>
+        </div>
+
+    <div>
+
+    </div>
+
+
+</body>
+</html>
