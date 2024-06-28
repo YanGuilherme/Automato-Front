@@ -15,9 +15,9 @@
         <h2>Entrada de dados</h2>
         <form id="carForm" onsubmit="enviarDados(event)">
             <p>Digite o modelo do carro</p>
-            <input type="text" name="entrada1" id="entrada1" placeholder="Digite o modelo">
+            <input type="text" id="entrada1" placeholder="Digite o modelo">
             <p>Digite o preco do carro</p>
-            <input type="text" name="entrada2" id="entrada2" placeholder="Digite o preco">
+            <input type="text"  id="entrada2" placeholder="Digite o preco">
             <br>
             <br>
             <button type="submit" class="butao">Adicionar</button>
@@ -35,32 +35,18 @@
             <button class="butao" onclick="listar()">Listar carros</button>
     </div>
 
-    <div class="borda_div">
+    <div class="borda_div" id="div_edit" style="display:none;">
         <h2>Edição dos dados</h2>
-        <form id="edit_form" onsubmit="update(event)">
-            <p>Digite o ID do carro</p>
-            <input type="number" name="entrada_edit1" id="entrada_edit1" placeholder="Digite o ID">
+        <form id="edit_form"  onsubmit="update(event)">  
+            <input type="hidden" id="id_select"> <!-- maneira nao legal de usar, pode ser alterado e visto-->
             <p>Digite o novo modelo do carro</p>
-            <input type="text" name="entrada_edit2" id="entrada_edit2" placeholder="Digite o modelo">
+            <input type="text" id="edit_modelo" placeholder="Digite o modelo">
             <p>Digite o novo preço do carro</p>
-            <input type="text" name="entrada_edit3" id="entrada_edit3" placeholder="Digite o preco">
+            <input type="text" id="edit_preco" placeholder="Digite o preco">
             <br><br>
             <button class="butao" type="submit">Editar</button> 
         </form>
     </div>
-
-    <div class="borda_div">
-        <h2>Exclusão de carro</h2>
-        <form id="delete_carro" onsubmit="deletar(event)">
-            <p>Digite o ID do carro a ser apagado</p>
-            <input id="id_delete" type="text" placeholder="Digite o ID">
-            <br><br>
-            <button class="butao" type="submit">Deletar</button> 
-        </form>
-    </div>
-
-
-
 
 </body>
 </html>

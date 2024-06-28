@@ -7,10 +7,15 @@ function enviarDados(event){
     xhr.open('POST', 'http://localhost:8080/create', true); //metodo post no endpoit adicionarCarro
     xhr.setRequestHeader('Content-Type', 'application/json');
     xhr.onreadystatechange = function(){
-        if(xhr.readyState === 4 && xhr.status === 200){
-            console.log(xhr.responseText); //verificando resposta
+        if(xhr.readyState === 4){
+            if(xhr.status === 201){
+                console.log(xhr.responseText); // Verificando resposta
+                listar();
+            } else {
+                console.error('Erro ao adicionar o carro.', xhr.responseText);
+            }
         }
-    }
+    };
     let dadosCarro = {
         carro: [
             {
@@ -27,6 +32,8 @@ function enviarDados(event){
     document.getElementById('entrada1').value = '';
     document.getElementById('entrada2').value = ''; //limpando entrada
 }
+
+
 function listar() {
     const xhr = new XMLHttpRequest();
     xhr.onreadystatechange = function(){
@@ -41,7 +48,11 @@ function listar() {
                 let item = '';
 
                 for (const element of carro) {
-                    item += `<li id="carroItem"> ID: ${element.id} <br/>Modelo: ${element.modelo} <br/> Preço: ${element.preco}
+            
+                    item += `<li id="carroItem"> 
+                    Modelo: ${element.modelo} <br/> Preço: ${element.preco} 
+                    <br/> <button class="butao" onclick="editarCarro(${element.id}, '${element.modelo}',${element.preco})">Editar</button> 
+                    <button class="butao" onclick="deletarCarro(${element.id})">Deletar</button> 
                     </li><br/>`;
                 }
 
@@ -55,17 +66,32 @@ function listar() {
     xhr.send();
 }
 
+function editarCarro(id, modelo, preco) {
+    console.log('Editar carro');
+    document.getElementById('id_select'). value = id;
+    document.getElementById('edit_modelo').value = modelo;
+    document.getElementById('edit_preco').value = preco;
+    
+    // Exibe o formulário de edição
+    document.getElementById('div_edit').style.display = 'block';
+    document.getElementById('div_edit').scrollIntoView({ behavior: 'smooth' });
+
+}
+
+function deletarCarro(id) {
+    if (confirm("Tem certeza que deseja deletar este carro?")) {
+        deletar(id);
+    }
+}
+
 function update(event){
     event.preventDefault();
 
-    const id = document.getElementById('entrada_edit1').value;
-    const modelo = document.getElementById('entrada_edit2').value;
-    const preco = document.getElementById('entrada_edit3').value;
+    const id = document.getElementById('id_select').value;
+    const modelo = document.getElementById('edit_modelo').value;
+    const preco = document.getElementById('edit_preco').value;
 
-    if(!id){
-        alert("Por favor, forneça o ID do carro que deseja alterar.");
-        return;
-    }
+
 
     const dadosCarro = {};
     if(modelo){
@@ -75,8 +101,10 @@ function update(event){
         dadosCarro.preco = preco;
     }
 
+
+
     if(Object.keys(dadosCarro).length === 0){
-        alert('Por favor, forneça preencha pelo menos um capo para atualizar.');
+        alert('Por favor, forneça preencha pelo menos um campo para atualizar.');
         return;
     }
 
@@ -99,20 +127,17 @@ function update(event){
 
     xhr.send(JSON.stringify(dadosCarro));
 
-    document.getElementById('entrada_edit1').value = '';
-    document.getElementById('entrada_edit2').value = '';
-    document.getElementById('entrada_edit3').value = '';
+    document.getElementById('edit_modelo').value = '';
+    document.getElementById('edit_preco').value = '';
+
+
+
+
+   document.getElementById('div_edit').style.display = 'none';
 
 }
 
-function deletar(event){
-    event.preventDefault();
-    const id = document.getElementById('id_delete').value;
-    if(!id){
-        alert("Por favor, forneça o ID do carro que deseja deletar.");
-        return;
-    }
-
+function deletar(id){ //funcionando bacana
     const xhr = new XMLHttpRequest();
     xhr.open('DELETE', `http://localhost:8080/delete/${id}`, true);
     xhr.setRequestHeader('Content-Type', 'application/json');
@@ -129,11 +154,4 @@ function deletar(event){
     };
 
     xhr.send();
-
-    document.getElementById('id_delete').value = '';
-
-
-
-
-
 }
