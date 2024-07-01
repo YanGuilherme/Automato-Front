@@ -12,6 +12,8 @@
     <h1>Página inicial</h1>
     <div class="borda_div" id="entrada_dados_automato">
         <form id="entrada_form">
+            <button id="btn_reset" type="button" disabled>Reset</button>
+
             <p>Escolha o tipo do autômato</p>
             <select name="tipo_automato" id="select_tipo">
                 <option value="AFD" selected>AFD</option>
@@ -21,11 +23,16 @@
             <input type="number" name="quantidade_estados" id="quantidade_estados" placeholder="Insira a quantidade">
             <button id="btn_inserir_estados">Inserir</button>
             <div id="container_estados"></div>
-            <br>
 
             <p>Digite o alfabeto que será utilizado</p>
             <input type="text" name="alfabeto" id="entrada_alfabeto" placeholder="Insira o alfabeto" disabled>
             <button id="btn_inserir_alfabeto" disabled>Inserir</button>
+            <div id="container_alfabeto"></div>
+
+            <h3>Transições</h3>
+            <div id="transicoes_form_container"></div>
+            <button id="btn_inserir_transicoes" type="button">Adicionar transições</button>
+            <div id="transicoes_container" style="display: none;"></div>
             
         </form>
 
