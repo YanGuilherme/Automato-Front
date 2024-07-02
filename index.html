@@ -1,18 +1,3 @@
-<!--
-    Fazer a separacao entre os estados e o botao para adicionar os estados
-
-    Conferir se algum estado de aceitacao foi marcado e colocar para marcar o primeiro como padrao
-
-    Achar uma maneira agradavel de adicionar as transicoes sem aparecer o alert (exibir um texto quando tudo estiver correto talvez)
-
-    Adicionar funcionalidade para o botao de enviar automato (pegar toda a quintupla e transforma-la em um json para ser enviado ao backend)
-
-
-
-
--->
-
-
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -46,8 +31,9 @@
 
             <h3>Transições</h3>
             <div id="transicoes_form_container"></div>
-            <button id="btn_inserir_transicoes" type="button" disabled>Adicionar transições</button>
             <div id="transicoes_container" style="display: none;"></div>
+
+            <button id="btn_inserir_transicoes" type="button" disabled>Adicionar transições</button>
 
             <h3>Selecione o estado inicial</h3>
             <div id="container_estado_inicial"></div>
@@ -55,7 +41,10 @@
             <h3>Defina o(s) estado(s) de aceitação</h3>
             <div id="container_estados_aceitacao"></div>
 
-            <button id="concluir_automato" disabled>Salvar autômato</button>
+            <button id="concluir_automato" type="button" disabled>Salvar autômato</button>
+            <div id="container_concluido"></div>
+            <br id="br_temporario">
+            <button id="outro_automato" type="button" disabled>Adicionar outro autômato</button>
 
             
         </form>

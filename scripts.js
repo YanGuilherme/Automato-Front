@@ -1,4 +1,7 @@
 document.addEventListener('DOMContentLoaded', function(){
+
+    const select_tipo_automato = document.getElementById('select_tipo');
+
     const input_quantidade = document.getElementById('quantidade_estados');
     const botao_inserir_estados = document.getElementById('btn_inserir_estados'); //variaveis estados
     const estados_container = document.getElementById('container_estados');
@@ -14,12 +17,14 @@ document.addEventListener('DOMContentLoaded', function(){
 
     const botao_reset = document.getElementById('btn_reset'); //botao reset para limpar as entradas
 
-    const select_tipo_automato = document.getElementById('select_tipo');
 
     const estado_inicial_container = document.getElementById('container_estado_inicial');
     const estados_aceitacao_container = document.getElementById('container_estados_aceitacao');
 
     const botao_salvar_automato = document.getElementById('concluir_automato');
+    const container_conclusao = document.getElementById('container_concluido');
+
+    const botao_adicionar_outro = document.getElementById('outro_automato');
 
 
 
@@ -29,8 +34,10 @@ document.addEventListener('DOMContentLoaded', function(){
     let estados = [];
     let alfabeto_array = [];
     const transicoes = new Map();
-    let estadoInicial = estados[0]; 
+    let estadoInicial = ''; 
     const estadosAceitacao = [];
+
+
 
 
     botao_reset.addEventListener('click', function(){
@@ -131,7 +138,13 @@ document.addEventListener('DOMContentLoaded', function(){
             alert('Por favor, selecione um estado de destino para cada transição no AFD.');
         } else {
             console.log(transicoes);
-            alert('Transições inseridas com sucesso!');
+            const transicao_msg = document.createElement('p');
+            transicao_msg.textContent = 'Transições inseridas com sucesso.';
+            form_transicoes_container.style.display = 'none';
+            transicoes_container.appendChild(transicao_msg);
+            
+
+            botao_inserir_transicoes.disabled = true;
             gerarEstadoInicial();
             gerarEstadosAceitacao();
 
@@ -173,6 +186,8 @@ document.addEventListener('DOMContentLoaded', function(){
                 transicao_div.appendChild(label);
                 transicao_div.appendChild(select);
                 form_transicoes_container.appendChild(transicao_div);
+                const espaco = document.createElement('br');
+                form_transicoes_container.appendChild(espaco);
 
             });
             document.createElement('br');
@@ -206,8 +221,12 @@ document.addEventListener('DOMContentLoaded', function(){
     
         // Marca o primeiro checkbox como padrão e impede desmarcação
         const checkboxes = estado_inicial_container.querySelectorAll('input[type="checkbox"]');
-        checkboxes.forEach(cb => {
-            cb.checked = cb.value === estadoInicial;
+        checkboxes.forEach((cb, index) => {
+            if (index === 0) {
+                cb.checked = true;
+                estadoInicial = cb.value;
+            }
+    
             cb.addEventListener('change', function(event) {
                 if (event.target.checked) {
                     estadoInicial = event.target.value;
@@ -217,20 +236,21 @@ document.addEventListener('DOMContentLoaded', function(){
                         }
                     });
                 } else {
+                    // Se o usuário tentar desmarcar o estado inicial, reverte a ação
                     event.target.checked = true;
                 }
             });
         });
     }
-    
+
     // Estados de Aceitação
     function gerarEstadosAceitacao() {
         criarCheckboxes(estados_aceitacao_container, 'estado_aceitacao', estados);
-    
+        
         estados_aceitacao_container.addEventListener('change', function(event) {
             const checkbox = event.target;
             const estado = checkbox.value;
-    
+        
             if (checkbox.checked) {
                 estadosAceitacao.push(estado);
             } else {
@@ -239,7 +259,58 @@ document.addEventListener('DOMContentLoaded', function(){
                     estadosAceitacao.splice(index, 1);
                 }
             }
+    
+            // Verifica se há pelo menos um estado de aceitação selecionado
+            if (estadosAceitacao.length > 0) {
+                botao_salvar_automato.disabled = false;
+            } else {
+                botao_salvar_automato.disabled = true;
+                alert('É necessário selecionar pelo menos um estado de aceitação.');
+            }
         });
-        concluir_automato.disabled = false;
     }
+
+
+
+
+    // Função para gerar a quíntupla do autômato em formato JSON
+    function salvarAutomato(event) {
+        event.preventDefault();
+        const tipo_automato = select_tipo_automato.value;
+
+        const automato = {
+            estados: estados,
+            alfabeto: alfabeto_array,
+            transicoes: Object.fromEntries(transicoes),
+            estadoInicial: estadoInicial,
+            estadosAceitacao: estadosAceitacao,
+            tipoAutomato: tipo_automato
+        };
+
+        const automatoJSON = JSON.stringify(automato);
+        console.log(automatoJSON);
+        //enviar para o backend
+        // Aqui você pode adicionar lógica para enviar esse JSON para o backend ou salvar localmente
+
+
+        const msg_salvo = document.createElement('p');
+        const br_temporario = document.getElementById('br_temporario');
+        msg_salvo.textContent = 'Automato salvo com sucesso!';
+
+        botao_salvar_automato.disabled = true;
+        br_temporario.remove();
+
+        container_conclusao.appendChild(msg_salvo);
+
+        botao_adicionar_outro.disabled = false;
+
+
+
+    }
+    
+    botao_salvar_automato.addEventListener('click', salvarAutomato);
+    botao_adicionar_outro.addEventListener('click', function(){
+        location.reload();
+        adcionar_outro_automato.disabled = true;
+    })
 });
