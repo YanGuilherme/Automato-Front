@@ -1,3 +1,18 @@
+<!--
+    Fazer a separacao entre os estados e o botao para adicionar os estados
+
+    Conferir se algum estado de aceitacao foi marcado e colocar para marcar o primeiro como padrao
+
+    Achar uma maneira agradavel de adicionar as transicoes sem aparecer o alert (exibir um texto quando tudo estiver correto talvez)
+
+    Adicionar funcionalidade para o botao de enviar automato (pegar toda a quintupla e transforma-la em um json para ser enviado ao backend)
+
+
+
+
+-->
+
+
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -14,25 +29,34 @@
         <form id="entrada_form">
             <button id="btn_reset" type="button" disabled>Reset</button>
 
-            <p>Escolha o tipo do autômato</p>
+            <h3>Escolha o tipo do autômato</h3>
             <select name="tipo_automato" id="select_tipo">
                 <option value="AFD" selected>AFD</option>
                 <option value="AFN">AFN</option>
             </select>
-            <p>Digite a quantidade de estados do autômato</p>
+            <h3>Digite a quantidade de estados do autômato</h3>
             <input type="number" name="quantidade_estados" id="quantidade_estados" placeholder="Insira a quantidade">
             <button id="btn_inserir_estados">Inserir</button>
             <div id="container_estados"></div>
 
-            <p>Digite o alfabeto que será utilizado</p>
+            <h3>Digite o alfabeto que será utilizado</h3>
             <input type="text" name="alfabeto" id="entrada_alfabeto" placeholder="Insira o alfabeto" disabled>
             <button id="btn_inserir_alfabeto" disabled>Inserir</button>
             <div id="container_alfabeto"></div>
 
             <h3>Transições</h3>
             <div id="transicoes_form_container"></div>
-            <button id="btn_inserir_transicoes" type="button">Adicionar transições</button>
+            <button id="btn_inserir_transicoes" type="button" disabled>Adicionar transições</button>
             <div id="transicoes_container" style="display: none;"></div>
+
+            <h3>Selecione o estado inicial</h3>
+            <div id="container_estado_inicial"></div>
+
+            <h3>Defina o(s) estado(s) de aceitação</h3>
+            <div id="container_estados_aceitacao"></div>
+
+            <button id="concluir_automato" disabled>Salvar autômato</button>
+
             
         </form>
 
