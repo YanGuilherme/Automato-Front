@@ -1,157 +1,245 @@
-function enviarDados(event){
-    event.preventDefault();
-    const modelo = document.getElementById('entrada1').value; //colocando os dados em variaveis js
-    const preco = document.getElementById('entrada2').value;
-    const id = '';
-    const xhr = new XMLHttpRequest();
-    xhr.open('POST', 'http://localhost:8080/create', true); //metodo post no endpoit adicionarCarro
-    xhr.setRequestHeader('Content-Type', 'application/json');
-    xhr.onreadystatechange = function(){
-        if(xhr.readyState === 4){
-            if(xhr.status === 201){
-                console.log(xhr.responseText); // Verificando resposta
-                listar();
-            } else {
-                console.error('Erro ao adicionar o carro.', xhr.responseText);
-            }
-        }
-    };
-    let dadosCarro = {
-        carro: [
-            {
-                modelo: modelo,
-                preco: preco,
-                id: id
-            }
-        ]
-    };
+document.addEventListener('DOMContentLoaded', function(){
+    const input_quantidade = document.getElementById('quantidade_estados');
+    const botao_inserir_estados = document.getElementById('btn_inserir_estados'); //variaveis estados
+    const estados_container = document.getElementById('container_estados');
+
+    const input_alfabeto = document.getElementById('entrada_alfabeto');
+    const botao_inserir_alfabeto = document.getElementById('btn_inserir_alfabeto'); 
+    const alfabeto_container = document.getElementById('container_alfabeto');// variaveis alfabeto
+
+
+    const transicoes_container = document.getElementById('transicoes_container');
+    const form_transicoes_container = document.getElementById('transicoes_form_container');
+    const botao_inserir_transicoes = document.getElementById('btn_inserir_transicoes'); //variaveis transicoes
+
+    const botao_reset = document.getElementById('btn_reset'); //botao reset para limpar as entradas
+
+    const select_tipo_automato = document.getElementById('select_tipo');
+
+    const estado_inicial_container = document.getElementById('container_estado_inicial');
+    const estados_aceitacao_container = document.getElementById('container_estados_aceitacao');
+
+    const botao_salvar_automato = document.getElementById('concluir_automato');
+
+
+
+
+
+    //variaveis que serao a 5-upla do automato
+    let estados = [];
+    let alfabeto_array = [];
+    const transicoes = new Map();
+    let estadoInicial = estados[0]; 
+    const estadosAceitacao = [];
+
+
+    botao_reset.addEventListener('click', function(){
+        location.reload(); //recarrega a page
+        botao_reset.disabled = true; //desabilita o botao
+    });
+
+
+    botao_inserir_estados.addEventListener('click', function(event){
+        event.preventDefault();
+
+
+        const quantidade_estados = input_quantidade.value;
+
+        if(quantidade_estados > 0){
+            botao_reset.disabled = false;
+
+            input_quantidade.disabled = true;
+            botao_inserir_estados.disabled = true;
+
+            input_alfabeto.disabled = false;
+            botao_inserir_alfabeto.disabled = false;
+
+            estados_container.innerHTML = '';
+            alfabeto_container.innerHTML = '';
+            
     
 
-    xhr.send(JSON.stringify(dadosCarro)); //enviando requisiçoes
+            for(let i = 1 ; i <= quantidade_estados ; i++){
+                estados.push(`q${i}`);
+                const estado_msg = document.createElement('p');
+                estado_msg.textContent = `Estado ${i} inserido: q${i}.`;
+                estados_container.appendChild(estado_msg);
+            }
+            console.log(estados);
+    
+        }else{
+            alert("Por favor insira uma quantidade válida de estados.");
+        }
+    });
 
-    document.getElementById('entrada1').value = '';
-    document.getElementById('entrada2').value = ''; //limpando entrada
-}
+    botao_inserir_alfabeto.addEventListener('click', function(event){
+        event.preventDefault();
+        
+        const alfabeto = input_alfabeto.value;
 
+        if(alfabeto.trim() !== ''){
 
-function listar() {
-    const xhr = new XMLHttpRequest();
-    xhr.onreadystatechange = function(){
-        if(this.readyState == 4 && this.status == 200){
-            let response = JSON.parse(xhr.responseText);
-            
-            // Se a resposta é um array diretamente, atribua-a a 'carro'
-            let carro = response; // essa porra de response ja é um array, nao precisa colocar response.carro, essa merda que tava bugando tudo
+            alfabeto_array = alfabeto.trim().split(/\s+/);
+            console.log(`Alfabeto inserido ${alfabeto_array}`);
 
-            // Verifique se 'carro' é realmente um array
-            if (Array.isArray(carro)) {
-                let item = '';
+            //logica para enviar o alfabeto para o backend aqui
 
-                for (const element of carro) {
-            
-                    item += `<li id="carroItem"> 
-                    Modelo: ${element.modelo} <br/> Preço: ${element.preco} 
-                    <br/> <button class="butao" onclick="editarCarro(${element.id}, '${element.modelo}',${element.preco})">Editar</button> 
-                    <button class="butao" onclick="deletarCarro(${element.id})">Deletar</button> 
-                    </li><br/>`;
+            input_alfabeto.value = '';
+
+            input_alfabeto.disabled = true;
+            botao_inserir_alfabeto.disabled = true;
+
+            botao_inserir_transicoes.disabled = false;
+        
+            for(const letra of alfabeto_array){
+                const alfabeto_msg = document.createElement('p');
+                alfabeto_msg.textContent = `Símbolo adicionado: ${letra}`;
+                alfabeto_container.appendChild(alfabeto_msg);
+            }
+
+            transicoes_container.style.display = 'block';
+            gerarFormularioTransicoes();
+        }else{
+            alert('Por favor, insira um alfabeto válido.');
+        }
+    });
+
+    botao_inserir_transicoes.addEventListener('click', function(event){
+        event.preventDefault();
+
+        const tipo_automato = select_tipo_automato.value;
+
+        const transicoesInput = document.querySelectorAll('.transicao_input');
+        let transicoesValidas = true;
+
+        transicoesInput.forEach(input => {
+            const [estadoAtual, simbolo] = input.name.split('_');
+            const selected_options = Array.from(input.selectedOptions).map(option => option.value);
+            if(tipo_automato === 'AFD'){
+                if(selected_options.length === 0 || selected_options[0] === ''){
+                    transicoesValidas = false;
+                } else {
+                    transicoes.set(`${estadoAtual}_${simbolo}`, selected_options[0]);
+                }
+            } else if(tipo_automato === 'AFN'){
+                const chave = `${estadoAtual}_${simbolo}`;
+                transicoes.set(chave, selected_options);
+            }
+        });
+
+        if(!transicoesValidas && tipo_automato === 'AFD'){
+            alert('Por favor, selecione um estado de destino para cada transição no AFD.');
+        } else {
+            console.log(transicoes);
+            alert('Transições inseridas com sucesso!');
+            gerarEstadoInicial();
+            gerarEstadosAceitacao();
+
+        }
+    });
+
+    function gerarFormularioTransicoes(){
+        form_transicoes_container.innerHTML = '';
+
+        const tipo_automato = select_tipo_automato.value;
+
+        estados.forEach(estado =>{
+            alfabeto_array.forEach(simbolo =>{
+                const transicao_div = document.createElement('div');
+                transicao_div.className = 'transicao';
+
+                const label = document.createElement('label');
+                label.textContent = `${estado} --${simbolo}--> `;
+
+                const select = document.createElement('select');
+                select.name = `${estado}_${simbolo}`;
+                select.className = 'transicao_input';
+
+                if(tipo_automato === 'AFN'){
+                    select.multiple = true;
                 }
 
-                document.getElementById('carros-list').innerHTML = item;
-            } else {
-                console.error('Resposta não é um array:', carro);
-            }
-        }
-    };
-    xhr.open("GET", "http://localhost:8080/findAll", true);
-    xhr.send();
-}
+                const option_vazia = document.createElement('option');
+                option_vazia.value = '';
+                option_vazia.textContent = 'Selecione o estado de destino';
+                select.appendChild(option_vazia);
 
-function editarCarro(id, modelo, preco) {
-    console.log('Editar carro');
-    document.getElementById('id_select'). value = id;
-    document.getElementById('edit_modelo').value = modelo;
-    document.getElementById('edit_preco').value = preco;
+                estados.forEach(destino =>{
+                    const option = document.createElement('option');
+                    option.value = destino;
+                    option.textContent = destino;
+                    select.appendChild(option);
+                });
+                transicao_div.appendChild(label);
+                transicao_div.appendChild(select);
+                form_transicoes_container.appendChild(transicao_div);
+
+            });
+            document.createElement('br');
+
+        });
+
+    }
+    select_tipo_automato.addEventListener('change', gerarFormularioTransicoes);
+
+
+
+    function criarCheckboxes(container, label, estadoArray) {
+        container.innerHTML = ''; // Limpa o conteúdo atual
+
+        estadoArray.forEach(estado => {
+            const checkbox = document.createElement('input');
+            checkbox.type = 'checkbox';
+            checkbox.name = `${label}_${estado}`;
+            checkbox.value = estado;
+
+            const checkboxLabel = document.createElement('label');
+            checkboxLabel.textContent = estado;
+            checkboxLabel.appendChild(checkbox);
+
+            container.appendChild(checkboxLabel);
+        });
+    }
+
+    function gerarEstadoInicial() {
+        criarCheckboxes(estado_inicial_container, 'estado_inicial', estados);
     
-    // Exibe o formulário de edição
-    document.getElementById('div_edit').style.display = 'block';
-    document.getElementById('div_edit').scrollIntoView({ behavior: 'smooth' });
-
-}
-
-function deletarCarro(id) {
-    if (confirm("Tem certeza que deseja deletar este carro?")) {
-        deletar(id);
+        // Marca o primeiro checkbox como padrão e impede desmarcação
+        const checkboxes = estado_inicial_container.querySelectorAll('input[type="checkbox"]');
+        checkboxes.forEach(cb => {
+            cb.checked = cb.value === estadoInicial;
+            cb.addEventListener('change', function(event) {
+                if (event.target.checked) {
+                    estadoInicial = event.target.value;
+                    checkboxes.forEach(otherCb => {
+                        if (otherCb !== event.target) {
+                            otherCb.checked = false;
+                        }
+                    });
+                } else {
+                    event.target.checked = true;
+                }
+            });
+        });
     }
-}
-
-function update(event){
-    event.preventDefault();
-
-    const id = document.getElementById('id_select').value;
-    const modelo = document.getElementById('edit_modelo').value;
-    const preco = document.getElementById('edit_preco').value;
-
-
-
-    const dadosCarro = {};
-    if(modelo){
-        dadosCarro.modelo = modelo;
-    }
-    if(preco){
-        dadosCarro.preco = preco;
-    }
-
-
-
-    if(Object.keys(dadosCarro).length === 0){
-        alert('Por favor, forneça preencha pelo menos um campo para atualizar.');
-        return;
-    }
-
-    const xhr = new XMLHttpRequest();
-    xhr.open('PUT',`http://localhost:8080/update/${id}`,true);
-    xhr.setRequestHeader('Content-Type','application/json');
-
-    xhr.onreadystatechange = function(){
-        if(xhr.readyState == 4){ //requisicao pronta
-            if(xhr.status == 200){ //retornando ok
-                console.log("Carro atualizado.");
-                listar(); // ja chama o metodo listar para ver como ficou a atualizacao
-            }else{
-                console.error('Erro ao atualizar o carro.', xhr.responseText);
-                
+    
+    // Estados de Aceitação
+    function gerarEstadosAceitacao() {
+        criarCheckboxes(estados_aceitacao_container, 'estado_aceitacao', estados);
+    
+        estados_aceitacao_container.addEventListener('change', function(event) {
+            const checkbox = event.target;
+            const estado = checkbox.value;
+    
+            if (checkbox.checked) {
+                estadosAceitacao.push(estado);
+            } else {
+                const index = estadosAceitacao.indexOf(estado);
+                if (index !== -1) {
+                    estadosAceitacao.splice(index, 1);
+                }
             }
-        }
-    };
-
-
-    xhr.send(JSON.stringify(dadosCarro));
-
-    document.getElementById('edit_modelo').value = '';
-    document.getElementById('edit_preco').value = '';
-
-
-
-
-   document.getElementById('div_edit').style.display = 'none';
-
-}
-
-function deletar(id){ //funcionando bacana
-    const xhr = new XMLHttpRequest();
-    xhr.open('DELETE', `http://localhost:8080/delete/${id}`, true);
-    xhr.setRequestHeader('Content-Type', 'application/json');
-
-    xhr.onreadystatechange = function(){
-        if(xhr.readyState == 4){
-            if(xhr.status == 204){ // 204 no content
-                console.log("Carro deletado com sucesso.");
-                listar();
-            }else{
-                console.error("Erro ao deletar o carro.", xhr.responseText);
-            }
-        }
-    };
-
-    xhr.send();
-}
+        });
+        concluir_automato.disabled = false;
+    }
+});

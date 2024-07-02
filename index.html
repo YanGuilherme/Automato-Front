@@ -1,51 +1,65 @@
+<!--
+    Fazer a separacao entre os estados e o botao para adicionar os estados
+
+    Conferir se algum estado de aceitacao foi marcado e colocar para marcar o primeiro como padrao
+
+    Achar uma maneira agradavel de adicionar as transicoes sem aparecer o alert (exibir um texto quando tudo estiver correto talvez)
+
+    Adicionar funcionalidade para o botao de enviar automato (pegar toda a quintupla e transforma-la em um json para ser enviado ao backend)
+
+
+
+
+-->
+
+
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AutomaTop</title>
     <link rel="stylesheet" href="style.css">
-    <script src="scripts.js"></script>
     <link rel="shortcut icon" href="images/128px-Gold_coin_icon.png" type="image/png">
-    <title>Carro</title>
+    <script src="scripts.js"></script>
 </head>
 <body>
-    <h1>Pagina inicial</h1>
+    <h1>Página inicial</h1>
+    <div class="borda_div" id="entrada_dados_automato">
+        <form id="entrada_form">
+            <button id="btn_reset" type="button" disabled>Reset</button>
 
-    <div id="entrada_dados" class="borda_div">
-        <h2>Entrada de dados</h2>
-        <form id="carForm" onsubmit="enviarDados(event)">
-            <p>Digite o modelo do carro</p>
-            <input type="text" id="entrada1" placeholder="Digite o modelo">
-            <p>Digite o preco do carro</p>
-            <input type="text"  id="entrada2" placeholder="Digite o preco">
-            <br>
-            <br>
-            <button type="submit" class="butao">Adicionar</button>
+            <h3>Escolha o tipo do autômato</h3>
+            <select name="tipo_automato" id="select_tipo">
+                <option value="AFD" selected>AFD</option>
+                <option value="AFN">AFN</option>
+            </select>
+            <h3>Digite a quantidade de estados do autômato</h3>
+            <input type="number" name="quantidade_estados" id="quantidade_estados" placeholder="Insira a quantidade">
+            <button id="btn_inserir_estados">Inserir</button>
+            <div id="container_estados"></div>
+
+            <h3>Digite o alfabeto que será utilizado</h3>
+            <input type="text" name="alfabeto" id="entrada_alfabeto" placeholder="Insira o alfabeto" disabled>
+            <button id="btn_inserir_alfabeto" disabled>Inserir</button>
+            <div id="container_alfabeto"></div>
+
+            <h3>Transições</h3>
+            <div id="transicoes_form_container"></div>
+            <button id="btn_inserir_transicoes" type="button" disabled>Adicionar transições</button>
+            <div id="transicoes_container" style="display: none;"></div>
+
+            <h3>Selecione o estado inicial</h3>
+            <div id="container_estado_inicial"></div>
+
+            <h3>Defina o(s) estado(s) de aceitação</h3>
+            <div id="container_estados_aceitacao"></div>
+
+            <button id="concluir_automato" disabled>Salvar autômato</button>
+
+            
         </form>
-    </div>
 
-    <div class = "borda_div">
-            <h2>Exibiçao dos dados</h2>
-            <section>
-                <div class="container">
-                    <ul id="carros-list">
-                    </ul>
-                </div>
-            </section>
-            <button class="butao" onclick="listar()">Listar carros</button>
-    </div>
-
-    <div class="borda_div" id="div_edit" style="display:none;">
-        <h2>Edição dos dados</h2>
-        <form id="edit_form"  onsubmit="update(event)">  
-            <input type="hidden" id="id_select"> <!-- maneira nao legal de usar, pode ser alterado e visto-->
-            <p>Digite o novo modelo do carro</p>
-            <input type="text" id="edit_modelo" placeholder="Digite o modelo">
-            <p>Digite o novo preço do carro</p>
-            <input type="text" id="edit_preco" placeholder="Digite o preco">
-            <br><br>
-            <button class="butao" type="submit">Editar</button> 
-        </form>
     </div>
 
 </body>
