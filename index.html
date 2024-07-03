@@ -3,7 +3,8 @@
         - Perguntar ao usuario se deseja adicionar um nome (tem que ver isso no backend pq as vezes vai automato sem nome)
         - Criar um bloco ao lado da parte de adicionar automatos (VISUALIZAR AUTOMATOS SALVOS)
             - Para cada automato tera as possibilidades de EXCLUIR - CONVERTER (caso seja afn) - TESTAR CADEIAS - MOSTRAR EQUIVALENCIA (ainda nem sei q q eh isso) - EXIBIR INFORMACOES DETALHADAS
-           
+        
+        
 
 -->
 
@@ -19,46 +20,44 @@
 </head>
 <body>
     <h1>Página inicial</h1>
-    <div class="borda_div" id="entrada_dados_automato">
-        <form id="entrada_form">
-            <button id="btn_reset" type="button" disabled>Reset</button>
-
-            <h3>Escolha o tipo do autômato</h3>
-            <select name="tipo_automato" id="select_tipo">
-                <option value="AFD" selected>AFD</option>
-                <option value="AFN">AFN</option>
-            </select>
-            <h3>Digite a quantidade de estados do autômato</h3>
-            <input type="number" name="quantidade_estados" id="quantidade_estados" placeholder="Insira a quantidade">
-            <button id="btn_inserir_estados">Inserir</button>
-            <div id="container_estados"></div>
-
-            <h3>Digite o alfabeto que será utilizado</h3>
-            <input type="text" name="alfabeto" id="entrada_alfabeto" placeholder="Insira o alfabeto" disabled>
-            <button id="btn_inserir_alfabeto" disabled>Inserir</button>
-            <div id="container_alfabeto"></div>
-
-            <h3>Transições</h3>
-            <div id="transicoes_form_container"></div>
-            <div id="transicoes_container" style="display: none;"></div>
-
-            <button id="btn_inserir_transicoes" type="button" disabled>Adicionar transições</button>
-
-            <h3>Selecione o estado inicial</h3>
-            <div id="container_estado_inicial"></div>
-
-            <h3>Defina o(s) estado(s) de aceitação</h3>
-            <div id="container_estados_aceitacao"></div>
-
-            <button id="concluir_automato" type="button" disabled>Salvar autômato</button>
-            <div id="container_concluido"></div>
-            <br id="br_temporario">
-            <button id="outro_automato" type="button" disabled>Adicionar outro autômato</button>
-
-            
-        </form>
+    <div class="container_geral">
+        <div class="borda_div" id="entrada_dados_automato">
+            <form id="entrada_form">
+                <button id="btn_reset" type="button" disabled>Reset</button>
+                <h3>Escolha o tipo do autômato</h3>
+                <select name="tipo_automato" id="select_tipo">
+                    <option value="AFD" selected>AFD</option>
+                    <option value="AFN">AFN</option>
+                </select>
+                <h3>Digite a quantidade de estados do autômato</h3>
+                <input type="number" name="quantidade_estados" id="quantidade_estados" placeholder="Insira a quantidade">
+                <button id="btn_inserir_estados">Inserir</button>
+                <div id="container_estados"></div>
+                <h3>Digite o alfabeto que será utilizado</h3>
+                <input type="text" name="alfabeto" id="entrada_alfabeto" placeholder="Insira o alfabeto" disabled>
+                <button id="btn_inserir_alfabeto" disabled>Inserir</button>
+                <div id="container_alfabeto"></div>
+                <h3>Transições</h3>
+                <div id="transicoes_form_container"></div>
+                <div id="transicoes_container" style="display: none;"></div>
+                <button id="btn_inserir_transicoes" type="button" disabled>Adicionar transições</button>
+                <h3>Selecione o estado inicial</h3>
+                <div id="container_estado_inicial"></div>
+                <h3>Defina o(s) estado(s) de aceitação</h3>
+                <div id="container_estados_aceitacao"></div>
+                <button id="concluir_automato" type="button" disabled>Salvar autômato</button>
+                <div id="container_concluido"></div>
+                <br id="br_temporario">
+                <button id="outro_automato" type="button" disabled>Adicionar outro autômato</button>
+        
+            </form>
+        </div>
+        <div class="borda_div" id="container_exibicao">
+            <h3>Exibição dos autômatos</h3>
+        </div>
 
     </div>
+
 
 </body>
 </html>

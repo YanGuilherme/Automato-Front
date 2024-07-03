@@ -316,7 +316,13 @@ document.addEventListener('DOMContentLoaded', function(){
 
         botao_adicionar_outro.disabled = false;
 
+        const initialCheckboxes = estado_inicial_container.querySelectorAll('input[type="checkbox"]');
+        initialCheckboxes.forEach(cb => cb.disabled = true);
+    
+        const acceptanceCheckboxes = estados_aceitacao_container.querySelectorAll('input[type="checkbox"]');
+        acceptanceCheckboxes.forEach(cb => cb.disabled = true);
 
+        buscarTodosAutomatos();
 
     }
     
@@ -324,5 +330,75 @@ document.addEventListener('DOMContentLoaded', function(){
     botao_adicionar_outro.addEventListener('click', function(){
         location.reload();
         botao_adicionar_outro.disabled = true;
-    })
+    });
+
+    
+});
+
+
+async function buscarTodosAutomatos(){
+    try {
+        const response = await fetch('http://localhost:8080/api/automatos/findAll');
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const automatos = await response.json();
+        console.log('Lista de autômatos: ', automatos);
+
+        exibirAutomatos(automatos);
+    } catch (error) {
+        console.error('Erro ao buscar autômatos:', error);
+    }
+}
+
+function exibirAutomatos(automatos){
+    const container_exibicao = document.getElementById('container_exibicao');
+    container_exibicao.innerHTML = ''; // Certifique-se de limpar o container antes de adicionar novos elementos
+
+    automatos.forEach(automato => {
+        const automato_container = document.createElement('div');
+        automato_container.classList.add('automato');
+
+        const id_automato = document.createElement('p');
+        id_automato.textContent = `Automato ID: ${automato.id}`;
+
+        const botao_detalhes = document.createElement('button');
+        botao_detalhes.textContent = 'Exibir Detalhes';
+        botao_detalhes.addEventListener('click', () => {
+            toggleDetalhesAutomato(automato, automato_container, botao_detalhes);
+        });
+
+        automato_container.appendChild(id_automato);
+        automato_container.appendChild(botao_detalhes);
+        container_exibicao.appendChild(automato_container); // Adicionar o container do automato ao container de exibição
+    });
+}
+
+function toggleDetalhesAutomato(automato, container, botao){
+    const detalhes_container = container.querySelector('.detalhes');
+
+    if (detalhes_container) {
+        container.removeChild(detalhes_container);
+        botao.textContent = 'Exibir Detalhes';
+    } else {
+        const new_detalhes_container = document.createElement('div');
+        new_detalhes_container.classList.add('detalhes');
+
+        const detalhes_automato = `
+            <p>Tipo: ${automato.tipo_automato}</p>
+            <p>Estado Inicial: ${automato.estado_inicial}</p>
+            <p>Estados: ${automato.estados.join(', ')}</p>
+            <p>Alfabeto: ${automato.alfabeto.join(', ')}</p>
+            <p>Estados de Aceitação: ${automato.estados_aceitacao.join(', ')}</p>
+            <p>Transições: ${JSON.stringify(automato.transicoes)}</p>
+        `;
+        new_detalhes_container.innerHTML = detalhes_automato;
+
+        container.appendChild(new_detalhes_container);
+        botao.textContent = 'Ocultar Detalhes';
+    }
+}
+
+document.addEventListener('DOMContentLoaded', (event) => {
+    buscarTodosAutomatos();
 });

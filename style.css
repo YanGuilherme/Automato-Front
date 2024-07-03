@@ -7,10 +7,18 @@ body{
     border: 1px solid black;
     padding: 5px;
     margin: 5px;
-    width: 50%;
+    width: 48%;
 }
 
 button{
     background-color: rgb(148, 247, 247);
     border-radius: 5px;
 }
+
+.container_geral{
+    display: flex;
+    justify-content: space-between;
+
+}
+
+
