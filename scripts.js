@@ -282,15 +282,20 @@ document.addEventListener('DOMContentLoaded', function(){
             estados: estados,
             alfabeto: alfabeto_array,
             transicoes: Object.fromEntries(transicoes),
-            estadoInicial: estadoInicial,
-            estadosAceitacao: estadosAceitacao,
-            tipoAutomato: tipo_automato
+            estado_inicial: estadoInicial,
+            estados_aceitacao: estadosAceitacao,
+            tipo_automato: tipo_automato
         };
 
         const automatoJSON = JSON.stringify(automato);
         console.log(automatoJSON);
         //enviar para o backend
         // Aqui você pode adicionar lógica para enviar esse JSON para o backend ou salvar localmente
+
+        const xhr = new XMLHttpRequest();
+        xhr.open('POST', 'http://localhost:8080/api/automatos/create', true);
+        xhr.setRequestHeader('Content-Type','application/json');
+        xhr.send(automatoJSON);
 
 
         const msg_salvo = document.createElement('p');
@@ -311,6 +316,6 @@ document.addEventListener('DOMContentLoaded', function(){
     botao_salvar_automato.addEventListener('click', salvarAutomato);
     botao_adicionar_outro.addEventListener('click', function(){
         location.reload();
-        adcionar_outro_automato.disabled = true;
+        botao_adicionar_outro.disabled = true;
     })
 });
