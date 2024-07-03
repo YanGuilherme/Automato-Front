@@ -83,34 +83,41 @@ document.addEventListener('DOMContentLoaded', function(){
         event.preventDefault();
         
         const alfabeto = input_alfabeto.value;
-
+    
         if(alfabeto.trim() !== ''){
-
             alfabeto_array = alfabeto.trim().split(/\s+/);
-            console.log(`Alfabeto inserido ${alfabeto_array}`);
-
-            //logica para enviar o alfabeto para o backend aqui
-
-            input_alfabeto.value = '';
-
-            input_alfabeto.disabled = true;
-            botao_inserir_alfabeto.disabled = true;
-
-            botao_inserir_transicoes.disabled = false;
-        
-            for(const letra of alfabeto_array){
-                const alfabeto_msg = document.createElement('p');
-                alfabeto_msg.textContent = `Símbolo adicionado: ${letra}`;
-                alfabeto_container.appendChild(alfabeto_msg);
+    
+            // Verificação se todos os símbolos têm apenas um caractere
+            const invalidSymbols = alfabeto_array.filter(symbol => symbol.length !== 1);
+    
+            if (invalidSymbols.length > 0) {
+                alert('Por favor, insira apenas caracteres únicos separados por espaços.');
+            } else {
+                console.log(`Alfabeto inserido ${alfabeto_array}`);
+    
+                // lógica para enviar o alfabeto para o backend aqui
+    
+                input_alfabeto.value = '';
+    
+                input_alfabeto.disabled = true;
+                botao_inserir_alfabeto.disabled = true;
+    
+                botao_inserir_transicoes.disabled = false;
+            
+                for(const letra of alfabeto_array){
+                    const alfabeto_msg = document.createElement('p');
+                    alfabeto_msg.textContent = `Símbolo adicionado: ${letra}`;
+                    alfabeto_container.appendChild(alfabeto_msg);
+                }
+    
+                transicoes_container.style.display = 'block';
+                gerarFormularioTransicoes();
             }
-
-            transicoes_container.style.display = 'block';
-            gerarFormularioTransicoes();
         }else{
             alert('Por favor, insira um alfabeto válido.');
         }
     });
-
+    
     botao_inserir_transicoes.addEventListener('click', function(event){
         event.preventDefault();
 
