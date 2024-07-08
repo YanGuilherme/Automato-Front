@@ -13,12 +13,45 @@ body{
 button{
     background-color: rgb(148, 247, 247);
     border-radius: 5px;
+    padding: 3px 5px;
+    margin: 5px;
+}
+
+input{
+    font-size: medium;
+}
+
+select{
+    font-size: medium;
 }
 
 .container_geral{
     display: flex;
     justify-content: space-between;
 
+}
+
+.tabela_transicoes {
+    width: 70%; /* Define a largura da tabela como 100% da largura do seu contêiner */
+    border-collapse: collapse; /* Combina as bordas das células para uma aparência mais limpa */
+}
+
+.tabela_transicoes th, .tabela_transicoes td {
+    padding: 8px; /* Espaçamento interno das células */
+    text-align: center; /* Alinha o texto no centro das células */
+}
+
+.tabela_transicoes th {
+    background-color: #f2f2f2; /* Cor de fundo para os cabeçalhos das colunas */
+    font-weight: bold; /* Texto em negrito nos cabeçalhos das colunas */
+}
+
+.tabela_transicoes td {
+    border: 1px solid #ddd; /* Borda das células com cor cinza claro */
+}
+
+.tabela_transicoes td:first-child {
+    font-weight: bold; /* Faz o primeiro elemento de cada linha em negrito (estados) */
 }
 
 
