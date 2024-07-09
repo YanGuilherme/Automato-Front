@@ -17,6 +17,14 @@ button{
     margin: 5px;
 }
 
+.aceita_cadeia{
+    color: green;
+}
+
+.rejeita_cadeia{
+    color: red;
+}
+
 input{
     font-size: medium;
 }
@@ -32,7 +40,7 @@ select{
 }
 
 .tabela_transicoes {
-    width: 70%; /* Define a largura da tabela como 100% da largura do seu contêiner */
+    width: 50%; /* Define a largura da tabela como 100% da largura do seu contêiner */
     border-collapse: collapse; /* Combina as bordas das células para uma aparência mais limpa */
 }
 
