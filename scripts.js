@@ -21,8 +21,6 @@ document.addEventListener('DOMContentLoaded', function(){
     const estado_inicial_container = document.getElementById('container_estado_inicial');
     const estados_aceitacao_container = document.getElementById('container_estados_aceitacao');
 
-    const cadeia = document.getElementById('entrada_cadeia').value;
-
     const botao_salvar_automato = document.getElementById('concluir_automato');
     const container_conclusao = document.getElementById('container_concluido');
 
@@ -298,16 +296,14 @@ document.addEventListener('DOMContentLoaded', function(){
         });
     }
 
-    function gerarJSON(cadeia){
+    function gerarJSON(){
         const transicoes_formatadas = mapTransicoes();
         const automato = {
-            "cadeia": 'abababa',
-            "automato": {
-                "tipo": automatoForm.tipo,
-                "estadoInicial": automatoForm.estadoInicial,
-                "estadosAceitacao": automatoForm.estadosAceitacao,
-                "transicoes": transicoes_formatadas
-            }
+            "tipo": automatoForm.tipo,
+            "estadoInicial": automatoForm.estadoInicial,
+            "estadosAceitacao": automatoForm.estadosAceitacao,
+            "transicoes": transicoes_formatadas
+            
         };
     
     
@@ -323,11 +319,11 @@ document.addEventListener('DOMContentLoaded', function(){
 
     async function salvarAutomato(event) {
         event.preventDefault();
-        const automato_enviar = gerarJSON(cadeia);
+        const automato_enviar = gerarJSON();
         
 
         try {
-            const response = await fetch('http://localhost:8080/api/automatos/exec', {
+            const response = await fetch('http://localhost:8080/api/automatos/save', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -396,7 +392,7 @@ function exibirAutomatos(automatos){
         automato_container.classList.add('automato');
 
         const id_automato = document.createElement('p');
-        id_automato.textContent = `Automato ${automato.id}`;
+        id_automato.textContent = `Automato ${'Automato x'}`;
 
         const botao_converter = document.createElement('button');
         botao_converter.textContent = 'Converter para AFD';
@@ -463,7 +459,7 @@ function parsePairString(pairString) {
 function formatarTransicoesComoTabela(transicoes, automato) {
     const estados = automato.estados;
     const alfabeto = automato.alfabeto;
-    const estadosDeAceitacao = automato.estados_aceitacao;
+    const estadosDeAceitacao = automato.estadosAceitacao;
 
     let tabela_html = '<table border="1" class="tabela_transicoes"><thead><tr><th>δ</th>';
     alfabeto.forEach(simbolo => {
@@ -473,18 +469,21 @@ function formatarTransicoesComoTabela(transicoes, automato) {
 
     estados.forEach(estado => {
         tabela_html += '<tr>';
-        if (estado === automato.estado_inicial) {
+        if(estado === automato.estadoInicial && estadosDeAceitacao.includes(estado)) {
+            tabela_html += `<td>*->${estado}</td>`;
+        } else if (estado === automato.estadoInicial) {
             tabela_html += `<td>->${estado}</td>`;
-        } else if (estadosDeAceitacao.includes(estado)) {
+        } else if(estadosDeAceitacao.includes(estado)){
             tabela_html += `<td>*${estado}</td>`;
-        } else {
+        }
+        else {
             tabela_html += `<td>${estado}</td>`;
         }
-
         alfabeto.forEach(simbolo => {
-            const transicao = transicoes[estado][simbolo];
+            const transicao = [transicoes[estado][simbolo]].flat();
             tabela_html += `<td>${transicao ? transicao.join(', ') : '-'}</td>`;
         });
+
 
         tabela_html += '</tr>';
     });
@@ -506,13 +505,13 @@ function toggleDetalhesAutomato(automato, container, botao){
 
 
         const detalhes_automato = `
-            <pre><strong>Tipo:</strong> ${automato.tipo_automato}</pre>
+            <pre><strong>Tipo:</strong> ${automato.tipo}</pre>
             <pre><strong>Estados <i>Q</i>:</strong> ${automato.estados.join(', ')}</pre>
             <pre><strong>Alfabeto Σ:</strong> ${automato.alfabeto.join(', ')}</pre>
             <pre><strong>Transições:</strong></pre>
-            <pre>${formatarTransicoesComoTabela(formatTransicoes(automato.transicoes),automato)}</pre>
-            <pre><strong>Estado inicial:</strong> ${automato.estado_inicial}</pre>
-            <pre><strong>Estados de aceitação:</strong> ${automato.estados_aceitacao.join(', ')}</pre>
+            <pre>${formatarTransicoesComoTabela(automato.transicoes,automato)}</pre>
+            <pre><strong>Estado inicial:</strong> ${automato.estadoInicial}</pre>
+            <pre><strong>Estados de aceitação:</strong> ${automato.estadosAceitacao.join(', ')}</pre>
         `;
         new_detalhes_container.innerHTML = detalhes_automato;
 
