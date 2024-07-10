@@ -12,12 +12,15 @@ async function buscarTodosAutomatos(){
 }
 
 function exibirAutomatos(automatos){
-    const container_exibicao = document.getElementById('container_exibicao');
-    container_exibicao.innerHTML = ''; // Certifique-se de limpar o container antes de adicionar novos elementos
-
+    const afn_list = document.getElementById('afn_list');
+    const afd_list = document.getElementById('afd_list');
+    afd_list.innerHTML = afn_list.innerHTML = ''; 
+    
     automatos.forEach(automato => {
         const automato_container = document.createElement('div');
         automato_container.id = `${automato.id}`;
+
+
         automato_container.className = 'element_automato';
 
         const id_automato = document.createElement('p');
@@ -30,6 +33,11 @@ function exibirAutomatos(automatos){
             toggleTestarAutomato(automato, automato_container, botao_cadeia);
         });
 
+        const botao_converter = document.createElement('button');
+        botao_converter.textContent = 'Converter';
+        botao_converter.addEventListener('click', ()=>{
+            converterAutomato(automato);
+        });
 
         const botao_deletar = document.createElement('button');
         botao_deletar.textContent = 'Deletar';
@@ -46,8 +54,17 @@ function exibirAutomatos(automatos){
         automato_container.appendChild(id_automato);
         automato_container.appendChild(botao_cadeia);
         automato_container.appendChild(botao_detalhes);
+        if(automato.tipo == 'AFN'){
+            automato_container.appendChild(botao_converter);
+        }
+
         automato_container.appendChild(botao_deletar);
-        container_exibicao.appendChild(automato_container); // Adicionar o container do automato ao container de exibição
+
+        if(automato.tipo == 'AFN'){
+            afn_list.appendChild(automato_container); // Adicionar o container do automato ao container de exibição
+        }else{
+            afd_list.appendChild(automato_container);
+        }
     });
 
 
@@ -75,25 +92,26 @@ async function processarCadeia(id, valorCadeia){
         }
         
         const jsonResponse = await response.json();
-        const aba_teste = document.querySelector('.input-container');
+        const secao_automato = document.getElementById(`${id}`)
 
         let resposta = document.getElementById(`resposta-${id}`);
         
         if (!resposta) {
             resposta = document.createElement('p');
             resposta.id = `resposta-${id}`;
-            aba_teste.appendChild(resposta);
+            secao_automato.appendChild(resposta);
 
         }
         if(jsonResponse.aceita){
             resposta.className = 'aceita_cadeia';
+            
             resposta.textContent = 'Aceita';
         }else{
             resposta.className = 'rejeita_cadeia';
             resposta.textContent = 'Rejeita';
         }
 
-        aba_teste.appendChild(resposta);
+        secao_automato.appendChild(resposta);
 
 
     } catch (error) {
@@ -102,32 +120,24 @@ async function processarCadeia(id, valorCadeia){
 
 }
 
+async function converterAutomato(automato){
+    const id = automato.id;
+    try {
+        await fetch(`http://localhost:8080/api/automatos/convertToAFD`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ id: id })
+            
+        });
+        console.log('Automato convertido com sucesso.');
+        await buscarTodosAutomatos(); // Atualizar a lista de autômatos após a exclusão
+    } catch (error) {
+        console.error('Erro ao converter o automato:', error);
+    }
 
-
-
-
-
-
-
-
-// async function converterAutomato(automato){
-//     try {
-//         const response = await fetch(`http://localhost:8080/api/automatos/convert/${automato.id}`, {
-//             method: 'POST',
-//             headers: {
-//                 'Content-Type': 'application/json'
-//             },
-//             body: JSON.stringify(automato)
-//         });
-
-
-//         console.log('Automato convertido com sucesso.');
-//         await buscarTodosAutomatos(); // Atualizar a lista de autômatos após a exclusão
-//     } catch (error) {
-//         console.error('Erro ao converter o automato:', error);
-//     }
-
-// }
+}
 
 function parsePairString(pairString) {
     const regex = /util\.Pair\{first=(.*)second=(.*)\}/;
@@ -207,20 +217,21 @@ function testarAutomato(id) {
 
 function toggleTestarAutomato(automato, container, botao) {
     const aba_teste = container.querySelector('.input-container');
-
+    const resposta = document.getElementById(`resposta-${automato.id}`);
 
     if (aba_teste) {
         container.removeChild(aba_teste);
+        container.removeChild(resposta);
         botao.textContent = 'Testar';
     } else {
         // Limpa campo de input anterior, se existir
         const conteudo_anterior = container.querySelector('.input-container');
         if (conteudo_anterior) {
             container.removeChild(conteudo_anterior);
+            container.removeChild(resposta);
 
         }
 
-        // Adiciona novo campo de input
         testarAutomato(automato.id);
 
         botao.textContent = 'Ocultar Teste';
@@ -277,7 +288,7 @@ async function deletar(automato){
         }
 
         console.log('Automato deletado com sucesso.');
-        await buscarTodosAutomatos(); // Atualizar a lista de autômatos após a exclusão
+        await buscarTodosAutomatos(); 
     } catch (error) {
         console.error('Erro ao deletar o automato:', error);
     }

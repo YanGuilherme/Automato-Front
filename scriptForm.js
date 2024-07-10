@@ -67,10 +67,10 @@ document.addEventListener('DOMContentLoaded', function(){
             
     
 
-            for(let i = 1 ; i <= quantidade_estados ; i++){
+            for(let i = 0 ; i < quantidade_estados ; i++){
                 automatoForm.estados.push(`q${i}`);
                 const estado_msg = document.createElement('p');
-                estado_msg.textContent = `Estado ${i} inserido: q${i}.`;
+                estado_msg.textContent = `Estado ${i+1} inserido: q${i}.`;
                 estados_container.appendChild(estado_msg);
             }
             console.log(automatoForm.estados);
@@ -360,7 +360,7 @@ document.addEventListener('DOMContentLoaded', function(){
             const acceptanceCheckboxes = estados_aceitacao_container.querySelectorAll('input[type="checkbox"]');
             acceptanceCheckboxes.forEach(cb => cb.disabled = true);
             
-            // Chama a função para buscar e exibir todos os autômatos após a criação bem-sucedida
+            // Chama a função para buscar e exibir todos os autômatos após a criação
             await buscarTodosAutomatos();
     
         } catch (error) {
