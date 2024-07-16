@@ -11,37 +11,41 @@ async function buscarTodosAutomatos(){
     }
 }
 
-function exibirAutomatos(automatos){
+function exibirAutomatos(automatos) {
     const afn_list = document.getElementById('afn_list');
     const afd_list = document.getElementById('afd_list');
-    afd_list.innerHTML = afn_list.innerHTML = ''; 
-    
+    const minimized_list = document.getElementById('minimized_list');
+    afn_list.innerHTML = afd_list.innerHTML = minimized_list.innerHTML = ''; // Limpar todas as listas
+
     automatos.forEach(automato => {
         const automato_container = document.createElement('div');
         automato_container.id = `${automato.id}`;
-
-
         automato_container.className = 'element_automato';
 
         const id_automato = document.createElement('p');
-        id_automato.textContent = 'Automato x';
-
+        id_automato.textContent = `${automato.id}`;
 
         const botao_cadeia = document.createElement('button');
         botao_cadeia.textContent = 'Testar';
-        botao_cadeia.addEventListener('click', ()=>{
+        botao_cadeia.addEventListener('click', () => {
             toggleTestarAutomato(automato, automato_container, botao_cadeia);
         });
 
         const botao_converter = document.createElement('button');
         botao_converter.textContent = 'Converter';
-        botao_converter.addEventListener('click', ()=>{
+        botao_converter.addEventListener('click', () => {
             converterAutomato(automato);
+        });
+
+        const botao_minimizar = document.createElement('button');
+        botao_minimizar.textContent = 'Minimizar';
+        botao_minimizar.addEventListener('click', () => {
+            minimizarAutomato(automato);
         });
 
         const botao_deletar = document.createElement('button');
         botao_deletar.textContent = 'Deletar';
-        botao_deletar.addEventListener('click', ()=>{
+        botao_deletar.addEventListener('click', () => {
             deletarAutomato(automato);
         });
 
@@ -54,22 +58,25 @@ function exibirAutomatos(automatos){
         automato_container.appendChild(id_automato);
         automato_container.appendChild(botao_cadeia);
         automato_container.appendChild(botao_detalhes);
-        if(automato.tipo == 'AFN'){
+
+        if (automato.tipo === 'AFN') {
             automato_container.appendChild(botao_converter);
+            afn_list.appendChild(automato_container); // Adicionar o container do automato ao container de exibição
+        } else if (automato.tipo === 'AFD') {
+            if (!automato.minimized) {
+                automato_container.appendChild(botao_minimizar);
+            }
+            
+            if (automato.minimized) {
+                minimized_list.appendChild(automato_container);
+            } else {
+                afd_list.appendChild(automato_container);
+            }
         }
 
         automato_container.appendChild(botao_deletar);
-
-        if(automato.tipo == 'AFN'){
-            afn_list.appendChild(automato_container); // Adicionar o container do automato ao container de exibição
-        }else{
-            afd_list.appendChild(automato_container);
-        }
     });
-
-
 }
-
 
 async function processarCadeia(id, valorCadeia){
 
@@ -118,6 +125,27 @@ async function processarCadeia(id, valorCadeia){
         console.error('Erro ao executar autômato:', error);
     }
 
+}
+
+async function minimizarAutomato(automato) {
+    const id = automato.id;
+
+    try {
+        const response = await fetch(`http://localhost:8080/api/automatos/minimizar`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ id: id })  // Enviando apenas o id
+        });
+        response.tipo = 'AFD_m';
+
+        console.log('Automato minimizado com sucesso');
+
+        await buscarTodosAutomatos();
+    } catch (error) {
+        console.error('Erro ao minimizar o automato', error);
+    }
 }
 
 async function converterAutomato(automato){
@@ -219,21 +247,26 @@ function toggleTestarAutomato(automato, container, botao) {
     const aba_teste = container.querySelector('.input-container');
     const resposta = document.getElementById(`resposta-${automato.id}`);
 
-    if (aba_teste) {
-        container.removeChild(aba_teste);
-        container.removeChild(resposta);
+    if (aba_teste || resposta) {
         botao.textContent = 'Testar';
-    } else {
+        if (aba_teste) {
+            container.removeChild(aba_teste);
+        }
+        if (resposta) {
+            container.removeChild(resposta);
+        }
+    }else {
         // Limpa campo de input anterior, se existir
         const conteudo_anterior = container.querySelector('.input-container');
+        const resposta_anterior = container.querySelector('.resposta');
         if (conteudo_anterior) {
             container.removeChild(conteudo_anterior);
-            container.removeChild(resposta);
-
+        }
+        if (resposta_anterior) {
+            container.removeChild(resposta_anterior);
         }
 
         testarAutomato(automato.id);
-
         botao.textContent = 'Ocultar Teste';
     }
 }
@@ -253,19 +286,64 @@ function toggleDetalhesAutomato(automato, container, botao){
 
 
         const detalhes_automato = `
+            <div id="automato-container-${automato.id}"></div>
             <pre><strong>Tipo:</strong> ${automato.tipo}</pre>
-            <pre><strong>Estados <i>Q</i>:</strong> ${automato.estados.join(', ')}</pre>
+            <pre style="white-space: pre-wrap;"><strong>Estados <i>Q</i>:</strong> ${automato.estados.join(', ')}</pre>
             <pre><strong>Alfabeto Σ:</strong> ${automato.alfabeto.join(', ')}</pre>
             <pre><strong>Transições:</strong></pre>
             <pre>${formatarTransicoesComoTabela(automato.transicoes,automato)}</pre>
             <pre><strong>Estado inicial:</strong> ${automato.estadoInicial}</pre>
-            <pre><strong>Estados de aceitação:</strong> ${automato.estadosAceitacao.join(', ')}</pre>
+            <pre  style="white-space: pre-wrap;"><strong>Estados de aceitação:</strong> ${automato.estadosAceitacao.join(', ')}</pre>
         `;
         new_detalhes_container.innerHTML = detalhes_automato;
 
         container.appendChild(new_detalhes_container);
         botao.textContent = 'Ocultar Detalhes';
+        renderAutomatos(automato);
     }
+}
+
+function renderAutomatos(automato) {
+    const container = document.getElementById(`automato-container-${automato.id}`);
+    
+    const automatoContainer = document.createElement('div');
+    automatoContainer.id = `automato-${automato.id}`;
+    automatoContainer.className = 'automato-container';
+    container.appendChild(automatoContainer);
+
+    const dotCode = `
+    digraph {
+        // Definir nós
+        ${automato.estados.map(estado => `${estado} [label="${estado}"];`).join('\n')}
+
+        // Definir estado inicial
+        initial [shape=plaintext, label=""];
+        initial -> ${automato.estadoInicial};
+
+        // Definir estados de aceitação
+        ${automato.estadosAceitacao.map(estado => `${estado} [shape=doublecircle];`).join('\n')}
+
+        // Definir transições
+        ${Object.keys(automato.transicoes).map(origem => {
+            const transicoes = automato.transicoes[origem];
+            return Object.keys(transicoes).map(simbolo => {
+                const destinos = [transicoes[simbolo]].flat();
+                return destinos.map(destino => `${origem} -> ${destino} [label="${simbolo}"];`).join('\n');
+            }).join('\n');
+        }).join('\n')}
+    }
+`;
+
+    // Renderizar o gráfico usando viz.js
+    const viz = new Viz();
+    viz.renderSVGElement(dotCode)
+        .then(svgElement => {
+            automatoContainer.appendChild(svgElement);
+        })
+        .catch(error => {
+            // Tratar erros, se houver
+            console.error(`Erro ao renderizar o gráfico para o automato ${automato.id}:`, error);
+        });
 }
 
 async function deletarAutomato(automato){

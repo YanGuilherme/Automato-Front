@@ -190,43 +190,48 @@ document.addEventListener('DOMContentLoaded', function(){
 
         automatoForm.tipo = select_tipo_automato.value;
 
-        automatoForm.estados.forEach(estado =>{
-            automatoForm.alfabeto_array.forEach(simbolo =>{
+        automatoForm.estados.forEach(estado => {
+            automatoForm.alfabeto_array.forEach(simbolo => {
                 const transicao_div = document.createElement('div');
                 transicao_div.className = 'transicao';
-
-                const label = document.createElement('label');
-                label.textContent = `${estado} --${simbolo}--> `;
-
+        
+                // Parágrafo combinado para "Origem:" e "Símbolo:"
+                const origem_simbolo_paragrafo = document.createElement('p');
+                origem_simbolo_paragrafo.innerHTML = `<strong>Origem:</strong> ${estado} <br> <strong>Símbolo:</strong> ${simbolo}`;
+                transicao_div.appendChild(origem_simbolo_paragrafo);
+        
+                // Select para escolha do estado de destino
                 const select = document.createElement('select');
                 select.name = `${estado}_${simbolo}`;
                 select.className = 'transicao_input';
-
-                if(automatoForm.tipo === 'AFN'){
+        
+                if (automatoForm.tipo === 'AFN') {
                     select.multiple = true;
                 }
-
+        
+                // Opção vazia para seleção do estado de destino
                 const option_vazia = document.createElement('option');
                 option_vazia.value = '';
                 option_vazia.textContent = 'Selecione o estado de destino';
                 select.appendChild(option_vazia);
-
-                automatoForm.estados.forEach(destino =>{
+        
+                // Opções para todos os estados como destino
+                automatoForm.estados.forEach(destino => {
                     const option = document.createElement('option');
                     option.value = destino;
                     option.textContent = destino;
                     select.appendChild(option);
                 });
-                transicao_div.appendChild(label);
+        
                 transicao_div.appendChild(select);
+        
+                // Adiciona a div de transição ao container principal
                 form_transicoes_container.appendChild(transicao_div);
-                const espaco = document.createElement('br');
-                form_transicoes_container.appendChild(espaco);
+        
 
             });
-            document.createElement('br');
-
         });
+        
 
     }
     select_tipo_automato.addEventListener('change', gerarFormularioTransicoes);
@@ -344,11 +349,9 @@ document.addEventListener('DOMContentLoaded', function(){
             }
     
             const msg_salvo = document.createElement('p');
-            const br_temporario = document.getElementById('br_temporario');
             msg_salvo.textContent = 'Automato salvo com sucesso!';
     
             botao_salvar_automato.disabled = true;
-            br_temporario.remove();
     
             container_conclusao.appendChild(msg_salvo);
     

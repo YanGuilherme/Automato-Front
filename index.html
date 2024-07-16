@@ -4,16 +4,18 @@
         -Convete de AFN para AFD
         -Simula aceitacao de palvras para AFD e AFN
         -Salva, deleta, lista todos, lista por ID
+        -Fazer minimização de automatos
+        -Tirar o estado D de onde não precisa (tirar estados inacessiveis)
 
 
     PARA FAZER
-        -Tirar o estado D de onde não precisa
+        -FrontEnd para minimizar
+        -Retirar cadeia vazia do AFN
         -Renomear os automatos
+        -Adicionar entrada de cadeia vazia nos AFN (tem que tirar ela antes de converter para AFD)
         -Colocar validacao na entrada da cadeia (vai tratar erros do backend)
         -Equivalencia entre automatos
             -Fazer metodo para gerar todas as cadeias possiveis
-        -Adicionar entrada de cadeia vazia nos AFN (tem que tirar ela antes de converter para AFD)
-        -Fazer minimização de automatos
 
 -->
 
@@ -29,11 +31,16 @@
     <link rel="shortcut icon" href="images/128px-Gold_coin_icon.png" type="image/png">
     <script src="scriptForm.js"></script>
     <script src="scriptPainel.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/viz.js/2.1.2/viz.js" integrity="sha512-vnRdmX8ZxbU+IhA2gLhZqXkX1neJISG10xy0iP0WauuClu3AIMknxyDjYHEpEhi8fTZPyOCWgqUCnEafDB/jVQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/viz.js/2.1.2/full.render.js"></script>
+
 </head>
 <body>
-    <h1>Página inicial</h1>
-    <div class="container_geral">
-        <div class="borda_div" id="entrada_dados_automato">
+    <header>
+        <h1>AutomaTop</h1>
+    </header>
+    <main class="container_geral">
+        <section class="borda_div" id="entrada_dados_automato">
             <h2>Formulário de entrada</h2>
             <form id="entrada_form">
                 <button id="btn_reset" type="button" disabled>Reset</button>
@@ -60,12 +67,11 @@
                 <div id="container_estados_aceitacao"></div>
                 <button id="concluir_automato" type="submit" disabled>Salvar automato</button>
                 <div id="container_concluido"></div>
-                <br id="br_temporario">
                 <button id="outro_automato" type="submit" disabled>Adicionar outro autômato</button>
             </form>
-        </div>
-        <div class="borda_div" id="exibicao_automato">
-            <h2>Exibição autômatos</h2>
+        </section>
+        <section class="borda_div" id="exibicao_automato">
+            <h2>Exibição dos autômatos</h2>
             <div id="container_exibicao">
                 <div class="automatos-container">
                     <h3>Autômatos não determinísticos</h3>
@@ -75,8 +81,12 @@
                     <h3>Autômatos determinísticos</h3>
                     <div class="automatos-list" id="afd_list"></div>
                 </div>
+                <div class="automatos-container">
+                    <h3>Autômatos minimizados</h3>
+                    <div class="automatos-list" id="minimized_list"></div>
+                </div>
             </div>
-        </div>
-    </div>
+        </section>
+    </main>
 </body>
 </html>
