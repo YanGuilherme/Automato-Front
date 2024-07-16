@@ -111,11 +111,10 @@ async function processarCadeia(id, valorCadeia){
         }
         if(jsonResponse.aceita){
             resposta.className = 'aceita_cadeia';
-            
             resposta.textContent = 'Aceita';
         }else{
             resposta.className = 'rejeita_cadeia';
-            resposta.textContent = 'Rejeita';
+            resposta.textContent = 'Rejeita: ' + jsonResponse.message;
         }
 
         secao_automato.appendChild(resposta);
@@ -303,12 +302,13 @@ function toggleDetalhesAutomato(automato, container, botao){
     }
 }
 
-function renderAutomatos(automato) {
+async function renderAutomatos(automato) {
     const container = document.getElementById(`automato-container-${automato.id}`);
     
     const automatoContainer = document.createElement('div');
     automatoContainer.id = `automato-${automato.id}`;
     automatoContainer.className = 'automato-container';
+    container.innerHTML = '';
     container.appendChild(automatoContainer);
 
     const dotCode = `
