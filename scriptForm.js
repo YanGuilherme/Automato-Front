@@ -1,5 +1,9 @@
 document.addEventListener('DOMContentLoaded', function(){
 
+    const input_nome = document.getElementById('entrada_nome');
+    const botao_escolher_nome = document.getElementById('btn_inserir_nome');
+    const container_nome = document.getElementById('container_nome');
+
     const select_tipo_automato = document.getElementById('select_tipo');
 
     const input_quantidade = document.getElementById('quantidade_estados');
@@ -32,6 +36,7 @@ document.addEventListener('DOMContentLoaded', function(){
 
     //variaveis que serao a 5-upla do automato
     let automatoForm = {
+        nome: '',
         tipo : '',
         estados : [],
         alfabeto_array : [],
@@ -46,6 +51,28 @@ document.addEventListener('DOMContentLoaded', function(){
         botao_reset.disabled = true; //desabilita o botao
     });
 
+    botao_escolher_nome.addEventListener('click', function(event){
+        event.preventDefault();
+        const nome_entrada = input_nome.value;
+        if(nome_entrada != ''){
+            automatoForm.nome = nome_entrada;
+            select_tipo_automato.disabled = false;
+            input_quantidade.disabled = false;
+            botao_inserir_estados.disabled = false;
+            input_nome.disabled = true;
+            botao_escolher_nome.disabled = true;
+            botao_reset.disabled = false;
+            container_nome.innerHTML = `Nome escolhido: <strong>${nome}</strong>`;
+
+        }else{
+            select_tipo_automato.disabled = true;
+            input_quantidade.disabled = true;
+            botao_inserir_estados.disabled = true;
+            alert("Por favor insira um nome válido.");
+
+        }
+    });
+
 
     botao_inserir_estados.addEventListener('click', function(event){
         event.preventDefault();
@@ -54,7 +81,6 @@ document.addEventListener('DOMContentLoaded', function(){
         const quantidade_estados = input_quantidade.value;
 
         if(quantidade_estados > 0){
-            botao_reset.disabled = false;
 
             input_quantidade.disabled = true;
             botao_inserir_estados.disabled = true;
@@ -70,7 +96,7 @@ document.addEventListener('DOMContentLoaded', function(){
             for(let i = 0 ; i < quantidade_estados ; i++){
                 automatoForm.estados.push(`q${i}`);
                 const estado_msg = document.createElement('p');
-                estado_msg.textContent = `Estado ${i+1} inserido: q${i}.`;
+                estado_msg.innerHTML += `Estado ${i+1} inserido: <strong>q${i}</strong>.`;
                 estados_container.appendChild(estado_msg);
             }
             console.log(automatoForm.estados);
@@ -94,7 +120,7 @@ document.addEventListener('DOMContentLoaded', function(){
             if (invalidSymbols.length > 0) {
                 alert('Por favor, insira apenas caracteres únicos separados por espaços.');
             } else {
-                console.log(`Alfabeto inserido ${automatoForm.alfabeto_array}`);
+                console.log(`<strong>Alfabeto inserido ${automatoForm.alfabeto_array}</strong>`);
     
                 // lógica para enviar o alfabeto para o backend aqui
     
@@ -107,7 +133,7 @@ document.addEventListener('DOMContentLoaded', function(){
             
                 for(const letra of automatoForm.alfabeto_array){
                     const alfabeto_msg = document.createElement('p');
-                    alfabeto_msg.textContent = `Símbolo adicionado: ${letra}`;
+                    alfabeto_msg.innerHTML = `Símbolo adicionado: <strong>${letra}</strong>`;
                     alfabeto_container.appendChild(alfabeto_msg);
                 }
     
@@ -125,33 +151,26 @@ document.addEventListener('DOMContentLoaded', function(){
         automatoForm.tipo = select_tipo_automato.value;
 
         const transicoesInput = document.querySelectorAll('.transicao_input');
-        //let transicoesValidas = true;
 
         transicoesInput.forEach(input => {
             const [estadoAtual, simbolo] = input.name.split('_');
             const selected_options = Array.from(input.selectedOptions).map(option => option.value);
             if(automatoForm.tipo === 'AFD'){
-                automatoForm.transicoes.set(`${estadoAtual}_${simbolo}`, selected_options[0]);
-                
-            }else{
+                if(selected_options.length === 0 || selected_options[0] === ''){
+                    transicoesValidas = false;
+                } else {
+                    automatoForm.transicoes.set(`${estadoAtual}_${simbolo}`, selected_options[0]);
+                }
+            } else if(automatoForm.tipo === 'AFN'){
+                const chave = `${estadoAtual}_${simbolo}`;
                 automatoForm.transicoes.set(chave, selected_options);
             }
 
-            // if(automatoForm.tipo === 'AFD'){
-            //     if(selected_options.length === 0 || selected_options[0] === ''){
-            //         transicoesValidas = false;
-            //     } else {
-            //         automatoForm.transicoes.set(`${estadoAtual}_${simbolo}`, selected_options[0]);
-            //     }
-            // } else if(automatoForm.tipo === 'AFN'){
-            //     const chave = `${estadoAtual}_${simbolo}`;
-            //     automatoForm.transicoes.set(chave, selected_options);
-            // }
         });
 
         console.log(mapTransicoes())
         const transicao_msg = document.createElement('p');
-        transicao_msg.textContent = 'Transições inseridas com sucesso.';
+        transicao_msg.innerHTML = '<strong>Transições inseridas com sucesso.</strong>';
         form_transicoes_container.style.display = 'none';
         transicoes_container.appendChild(transicao_msg);
         
@@ -161,21 +180,7 @@ document.addEventListener('DOMContentLoaded', function(){
         gerarEstadosAceitacao();
 
 
-        // if(!transicoesValidas && automatoForm.tipo === 'AFD'){
-        //     alert('Por favor, selecione um estado de destino para cada transição no AFD.');
-        // } else {
-        //     console.log(mapTransicoes())
-        //     const transicao_msg = document.createElement('p');
-        //     transicao_msg.textContent = 'Transições inseridas com sucesso.';
-        //     form_transicoes_container.style.display = 'none';
-        //     transicoes_container.appendChild(transicao_msg);
-            
 
-        //     botao_inserir_transicoes.disabled = true;
-        //     gerarEstadoInicial();
-        //     gerarEstadosAceitacao();
-
-        // }
     });
     function mapTransicoes() {
         const transicoes_formatadas = {};
@@ -202,7 +207,7 @@ document.addEventListener('DOMContentLoaded', function(){
             return it.length > 0;
         });
         return estadosDestino;       
-    }
+    }   
 
     function gerarFormularioTransicoes(){
         form_transicoes_container.innerHTML = '';
@@ -331,6 +336,7 @@ document.addEventListener('DOMContentLoaded', function(){
     function gerarJSON(){
         const transicoes_formatadas = mapTransicoes();
         const automato = {
+            "nome": automatoForm.nome,
             "tipo": automatoForm.tipo,
             "estadoInicial": automatoForm.estadoInicial,
             "estadosAceitacao": automatoForm.estadosAceitacao,

@@ -1,3 +1,4 @@
+
 async function buscarTodosAutomatos(){
     try {
         const response = await fetch('http://localhost:8080/api/automatos/findAll');
@@ -6,6 +7,8 @@ async function buscarTodosAutomatos(){
         }
         const automatos = await response.json();
         exibirAutomatos(automatos);
+        return automatos;
+
     } catch (error) {
         console.error('Erro ao buscar autômatos:', error);
     }
@@ -22,8 +25,9 @@ function exibirAutomatos(automatos) {
         automato_container.id = `${automato.id}`;
         automato_container.className = 'element_automato';
 
-        const id_automato = document.createElement('p');
-        id_automato.textContent = `${automato.id}`;
+        const rotulo_automato = document.createElement('p');
+        rotulo_automato.className = 'rotulo_automato';
+        rotulo_automato.innerHTML = `${automato.nome}`;
 
         const botao_cadeia = document.createElement('button');
         botao_cadeia.textContent = 'Testar';
@@ -58,10 +62,10 @@ function exibirAutomatos(automatos) {
         const botao_equivalencia = document.createElement('button');
         botao_equivalencia.textContent = 'Testar equivalência';
         botao_equivalencia.addEventListener('click', () => {
-            testar_equivalencia(automato);
+            modal_equivalencia(automato);
         });
 
-        automato_container.appendChild(id_automato);
+        automato_container.appendChild(rotulo_automato);
         automato_container.appendChild(botao_cadeia);
         automato_container.appendChild(botao_detalhes);
 
@@ -86,17 +90,87 @@ function exibirAutomatos(automatos) {
     });
 }
 
-async function testar_equivalencia(automato) {
-    let modal = document.getElementById("myModal");
-    modal.style.display = "block";
+async function testar_equivalencia(id1, id2){
+    try {
+        const response = await fetch(`http://localhost:8080/api/automatos/testarEquivalencia/${id1}/${id2}`);
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const resposta = await response.json();
+        return resposta;
+
+    } catch (error) {
+        console.error('Erro ao testar equivalencia:', error);
+    }
 }
 
-// Fechar o modal quando o usuário clicar no "x"
-let span = document.getElementsByClassName("close")[0];
-span.onclick = function() {
+async function modal_equivalencia(automato) {
+
     let modal = document.getElementById("myModal");
-    modal.style.display = "none";
+    let container_resultado = document.getElementById("container_resultado");
+
+    modal.style.display = "block";
+
+    const lista_automatos = await buscarTodosAutomatos();
+
+    let select = document.getElementById("automatoSelect");
+
+    select.innerHTML = ''; // Limpar opções existentes
+    container_resultado.innerHTML = '';
+
+    lista_automatos.forEach(a => {
+        if (a.id !== automato.id) {
+            const option = document.createElement("option");
+            option.value = a.id;
+            option.text = `${a.nome} - Tipo: ${a.tipo}`;
+            select.appendChild(option);
+        }
+    });
+    let saveButton = document.getElementById("saveButton");
+
+    if (saveButton) {
+        saveButton.onclick = async function() {
+            container_resultado.innerHTML = '';
+            const select = document.getElementById("automatoSelect");
+            const selectedId = select.value;
+            const resposta_teste = await testar_equivalencia(automato.id, selectedId);
+
+            const exibir_resposta = document.createElement("p");
+            const exibir_resposta_final = document.createElement("p");
+
+            let validacao_final = false;
+
+            resposta_teste.forEach(resposta => {
+                exibir_resposta.innerHTML += 
+                `<strong>Tipo de teste: </strong> ${resposta.nome}<br>
+                <strong>Resultado: </strong>${resposta.message}<br><br>
+                `;
+                validacao_final = resposta.sucesso;
+                
+            });        
+            if(validacao_final){
+                exibir_resposta_final.className = 'aceita_cadeia';
+                exibir_resposta_final.textContent = 'Equivalentes';
+            }else{
+                exibir_resposta_final.className = 'rejeita_cadeia';
+                exibir_resposta_final.textContent = 'Não equivalentes'
+            }
+
+            
+            container_resultado.appendChild(exibir_resposta);
+            container_resultado.appendChild(exibir_resposta_final);
+
+        };
+
+    }
+    
+
 }
+
+
+
+
+
 
 // Fechar o modal quando o usuário clicar fora dele
 window.onclick = function(event) {
@@ -314,13 +388,14 @@ function toggleDetalhesAutomato(automato, container, botao){
 
         const detalhes_automato = `
             <div id="automato-container-${automato.id}"></div>
+            <pre><strong>Nome:</strong> ${automato.nome}</pre>
             <pre><strong>Tipo:</strong> ${automato.tipo}</pre>
             <pre style="white-space: pre-wrap;"><strong>Estados <i>Q</i>:</strong> ${automato.estados.join(', ')}</pre>
             <pre><strong>Alfabeto Σ:</strong> ${automato.alfabeto.join(', ')}</pre>
             <pre><strong>Transições:</strong></pre>
             <pre>${formatarTransicoesComoTabela(automato.transicoes,automato)}</pre>
             <pre><strong>Estado inicial:</strong> ${automato.estadoInicial}</pre>
-            <pre  style="white-space: pre-wrap;"><strong>Estados de aceitação:</strong> ${automato.estadosAceitacao.join(', ')}</pre>
+            <pre  style="white-space: pre-wrap;"><strong>Estados de aceitação: </strong> ${automato.estadosAceitacao.join(', ')}</pre>
         `;
         new_detalhes_container.innerHTML = detalhes_automato;
 
@@ -364,7 +439,6 @@ async function renderAutomatos(automato) {
 
     // Renderizar o gráfico usando viz.js
     const viz = new Viz();
-    console.log(dotCode);
     viz.renderSVGElement(dotCode)
         .then(svgElement => {
             automatoContainer.appendChild(svgElement);

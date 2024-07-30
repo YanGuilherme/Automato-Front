@@ -4,7 +4,7 @@ body {
     font-family: Arial, Helvetica, sans-serif;
     margin: 0;
     padding: 0;
-    background-color: #f5f5f5;
+    background-color: #00000098;
 }
 
 header {
@@ -33,6 +33,7 @@ button {
     margin: 10px 2px;
     cursor: pointer;
     transition: background-color 0.3s;
+    font-weight: bolder;
 }
 
 button:disabled {
@@ -135,11 +136,21 @@ input, select {
 .aceita_cadeia {
     animation: brilho_aceita 0.5s linear;
     color: green;
+    font-weight: bolder;
+    font-size:25px;
+
+}
+
+.rotulo_automato{
+    font-size: 25px;
 }
 
 .rejeita_cadeia {
     animation: brilho_rejeita 0.5s linear;
     color: red;
+    font-weight: bolder;
+    font-size:30px;
+
 }
 
 .modal {
