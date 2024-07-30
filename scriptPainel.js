@@ -55,6 +55,12 @@ function exibirAutomatos(automatos) {
             toggleDetalhesAutomato(automato, automato_container, botao_detalhes);
         });
 
+        const botao_equivalencia = document.createElement('button');
+        botao_equivalencia.textContent = 'Testar equivalência';
+        botao_equivalencia.addEventListener('click', () => {
+            testar_equivalencia(automato);
+        });
+
         automato_container.appendChild(id_automato);
         automato_container.appendChild(botao_cadeia);
         automato_container.appendChild(botao_detalhes);
@@ -74,8 +80,30 @@ function exibirAutomatos(automatos) {
             }
         }
 
+        automato_container.appendChild(botao_equivalencia);
+
         automato_container.appendChild(botao_deletar);
     });
+}
+
+async function testar_equivalencia(automato) {
+    let modal = document.getElementById("myModal");
+    modal.style.display = "block";
+}
+
+// Fechar o modal quando o usuário clicar no "x"
+let span = document.getElementsByClassName("close")[0];
+span.onclick = function() {
+    let modal = document.getElementById("myModal");
+    modal.style.display = "none";
+}
+
+// Fechar o modal quando o usuário clicar fora dele
+window.onclick = function(event) {
+    let modal = document.getElementById("myModal");
+    if (event.target == modal) {
+        modal.style.display = "none";
+    }
 }
 
 async function processarCadeia(id, valorCadeia){
@@ -328,14 +356,15 @@ async function renderAutomatos(automato) {
             const transicoes = automato.transicoes[origem];
             return Object.keys(transicoes).map(simbolo => {
                 const destinos = [transicoes[simbolo]].flat();
-                return destinos.map(destino => `${origem} -> ${destino} [label="${simbolo}"];`).join('\n');
+                return destinos.filter(destino => destino).map(destino => `${origem} -> ${destino} [label="${simbolo}"];`).join('\n');
             }).join('\n');
         }).join('\n')}
     }
-`;
+    `;
 
     // Renderizar o gráfico usando viz.js
     const viz = new Viz();
+    console.log(dotCode);
     viz.renderSVGElement(dotCode)
         .then(svgElement => {
             automatoContainer.appendChild(svgElement);

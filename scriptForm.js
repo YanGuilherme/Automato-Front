@@ -125,38 +125,57 @@ document.addEventListener('DOMContentLoaded', function(){
         automatoForm.tipo = select_tipo_automato.value;
 
         const transicoesInput = document.querySelectorAll('.transicao_input');
-        let transicoesValidas = true;
+        //let transicoesValidas = true;
 
         transicoesInput.forEach(input => {
             const [estadoAtual, simbolo] = input.name.split('_');
             const selected_options = Array.from(input.selectedOptions).map(option => option.value);
             if(automatoForm.tipo === 'AFD'){
-                if(selected_options.length === 0 || selected_options[0] === ''){
-                    transicoesValidas = false;
-                } else {
-                    automatoForm.transicoes.set(`${estadoAtual}_${simbolo}`, selected_options[0]);
-                }
-            } else if(automatoForm.tipo === 'AFN'){
-                const chave = `${estadoAtual}_${simbolo}`;
+                automatoForm.transicoes.set(`${estadoAtual}_${simbolo}`, selected_options[0]);
+                
+            }else{
                 automatoForm.transicoes.set(chave, selected_options);
             }
+
+            // if(automatoForm.tipo === 'AFD'){
+            //     if(selected_options.length === 0 || selected_options[0] === ''){
+            //         transicoesValidas = false;
+            //     } else {
+            //         automatoForm.transicoes.set(`${estadoAtual}_${simbolo}`, selected_options[0]);
+            //     }
+            // } else if(automatoForm.tipo === 'AFN'){
+            //     const chave = `${estadoAtual}_${simbolo}`;
+            //     automatoForm.transicoes.set(chave, selected_options);
+            // }
         });
 
-        if(!transicoesValidas && automatoForm.tipo === 'AFD'){
-            alert('Por favor, selecione um estado de destino para cada transição no AFD.');
-        } else {
-            console.log(mapTransicoes())
-            const transicao_msg = document.createElement('p');
-            transicao_msg.textContent = 'Transições inseridas com sucesso.';
-            form_transicoes_container.style.display = 'none';
-            transicoes_container.appendChild(transicao_msg);
+        console.log(mapTransicoes())
+        const transicao_msg = document.createElement('p');
+        transicao_msg.textContent = 'Transições inseridas com sucesso.';
+        form_transicoes_container.style.display = 'none';
+        transicoes_container.appendChild(transicao_msg);
+        
+
+        botao_inserir_transicoes.disabled = true;
+        gerarEstadoInicial();
+        gerarEstadosAceitacao();
+
+
+        // if(!transicoesValidas && automatoForm.tipo === 'AFD'){
+        //     alert('Por favor, selecione um estado de destino para cada transição no AFD.');
+        // } else {
+        //     console.log(mapTransicoes())
+        //     const transicao_msg = document.createElement('p');
+        //     transicao_msg.textContent = 'Transições inseridas com sucesso.';
+        //     form_transicoes_container.style.display = 'none';
+        //     transicoes_container.appendChild(transicao_msg);
             
 
-            botao_inserir_transicoes.disabled = true;
-            gerarEstadoInicial();
-            gerarEstadosAceitacao();
+        //     botao_inserir_transicoes.disabled = true;
+        //     gerarEstadoInicial();
+        //     gerarEstadosAceitacao();
 
-        }
+        // }
     });
     function mapTransicoes() {
         const transicoes_formatadas = {};
