@@ -1,3 +1,6 @@
+const host = 'https://a4a1-179-189-87-176.ngrok-free.app';
+//const host = 'http://localhost:8080';
+
 document.addEventListener('DOMContentLoaded', function(){
 
     const input_nome = document.getElementById('entrada_nome');
@@ -361,7 +364,7 @@ document.addEventListener('DOMContentLoaded', function(){
         
 
         try {
-            const response = await fetch('http://localhost:8080/api/automatos/save', {
+            const response = await fetch(`${host}/api/automatos/save`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

@@ -1,9 +1,11 @@
 
-async function buscarTodosAutomatos(){
+async function buscarTodosAutomatos() {
     try {
-        const response = await fetch('http://localhost:8080/api/automatos/findAll');
+        const response = await fetch(`${host}/api/automatos/findAll`);
         if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
+            // Exibir o conteúdo da resposta de erro para ajudar na depuração
+            const errorText = await response.text();
+            throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
         }
         const automatos = await response.json();
         exibirAutomatos(automatos);
@@ -92,7 +94,7 @@ function exibirAutomatos(automatos) {
 
 async function testar_equivalencia(id1, id2){
     try {
-        const response = await fetch(`http://localhost:8080/api/automatos/testarEquivalencia/${id1}/${id2}`);
+        const response = await fetch(`${host}/api/automatos/testarEquivalencia/${id1}/${id2}`);
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
@@ -188,7 +190,7 @@ async function processarCadeia(id, valorCadeia){
     }
 
     try {
-        const response = await fetch('http://localhost:8080/api/automatos/exec', {
+        const response = await fetch(`${host}/api/automatos/exec`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -232,7 +234,7 @@ async function minimizarAutomato(automato) {
     const id = automato.id;
 
     try {
-        const response = await fetch(`http://localhost:8080/api/automatos/minimizar`, {
+        const response = await fetch(`${host}/api/automatos/minimizar`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -252,7 +254,7 @@ async function minimizarAutomato(automato) {
 async function converterAutomato(automato){
     const id = automato.id;
     try {
-        await fetch(`http://localhost:8080/api/automatos/convertToAFD`, {
+        await fetch(`${host}/api/automatos/convertToAFD`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -457,7 +459,7 @@ async function deletarAutomato(automato){
 
 async function deletar(automato){
     try {
-        const response = await fetch(`http://localhost:8080/api/automatos/delete/${automato.id}`, {
+        const response = await fetch(`${host}/api/automatos/delete/${automato.id}`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json'
