@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Regex</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="shortcut icon" href="images/128px-Gold_coin_icon.png" type="image/png">
+    <script src="scriptForm.js"></script>
+    <script src="scriptPainel.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/viz.js/2.1.2/viz.js" integrity="sha512-vnRdmX8ZxbU+IhA2gLhZqXkX1neJISG10xy0iP0WauuClu3AIMknxyDjYHEpEhi8fTZPyOCWgqUCnEafDB/jVQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/viz.js/2.1.2/full.render.js"></script>
+
+
+
+</head>
+<body>
+    <header>
+        <h1>AutomaTop</h1>
+    </header>
+    <nav class="menu">
+        <a href="index.html">Inserir 5-upla</a>
+        <a href="regex.html">Inserir ER</a>
+        <a href="turing_machine.html">Máquina de Turing</a>
+    </nav>
+    <main class="container_geral">
+        <section class="borda_div" id="entrada_regex">
+            <h2>Entrada de Expressão Regular</h2>
+            <form id="entrada_regex_form">
+                <h3>Digite a expressão regular</h3>
+                <input type="text" name="regex" id="regex" placeholder="Insira a expressão. Exemplo: (a+b)*c">
+                <button type="submit">Gerar autômato</button>
+            </form>
+        </section>
+        <section class="borda_div" id="exibicao_automato">
+            <h2>Exibição dos autômatos</h2>
+            <div id="container_exibicao">
+                <div class="automatos-container">
+                    <h3>Autômatos não determinísticos</h3>
+                    <div class="automatos-list" id="afn_list"></div>
+                </div>
+                <div class="automatos-container">
+                    <h3>Autômatos determinísticos</h3>
+                    <div class="automatos-list" id="afd_list"></div>
+                </div>
+                <div class="automatos-container">
+                    <h3>Autômatos minimizados</h3>
+                    <div class="automatos-list" id="minimized_list"></div>
+                </div>
+                <div class="automatos-container">
+                    <h3>Autômatos gerados por ER</h3>
+                    <div class="automatos-list" id="er_generated_list"></div>
+                </div>
+            </div>
+        </section>
+
+        <div id="myModal" class="modal">
+            <div class="modal-content">
+              <h2>Selecione um Autômato</h2>
+              <select id="automatoSelect">
+                <!-- Opções serão preenchidas aqui -->
+              </select>
+              <button id="saveButton">Testar</button>
+              <div id="container_resultado"></div>
+            </div>
+          </div>
+
+    </main>
+    
+</body>
+</html>

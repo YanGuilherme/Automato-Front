@@ -1,4 +1,4 @@
-const host = 'https://a4a1-179-189-87-176.ngrok-free.app';
+const host = 'http://192.168.3.4:8080';
 //const host = 'http://localhost:8080';
 
 document.addEventListener('DOMContentLoaded', function(){
@@ -90,6 +90,7 @@ document.addEventListener('DOMContentLoaded', function(){
 
             input_alfabeto.disabled = false;
             botao_inserir_alfabeto.disabled = false;
+            select_tipo_automato.disabled = true;
 
             estados_container.innerHTML = '';
             alfabeto_container.innerHTML = '';
@@ -113,6 +114,8 @@ document.addEventListener('DOMContentLoaded', function(){
         event.preventDefault();
         
         const alfabeto = input_alfabeto.value;
+        automatoForm.tipo = select_tipo_automato.value;
+
     
         if(alfabeto.trim() !== ''){
             automatoForm.alfabeto_array = alfabeto.trim().split(/\s+/);
@@ -124,6 +127,11 @@ document.addEventListener('DOMContentLoaded', function(){
                 alert('Por favor, insira apenas caracteres únicos separados por espaços.');
             } else {
                 console.log(`<strong>Alfabeto inserido ${automatoForm.alfabeto_array}</strong>`);
+                
+                if(automatoForm.tipo === 'AFN'){
+                    automatoForm.alfabeto_array.push('ε'); 
+
+                }
     
                 // lógica para enviar o alfabeto para o backend aqui
     
@@ -177,7 +185,10 @@ document.addEventListener('DOMContentLoaded', function(){
         form_transicoes_container.style.display = 'none';
         transicoes_container.appendChild(transicao_msg);
         
+        if(automatoForm.tipo === 'AFN'){
+            automatoForm.alfabeto_array.pop('ε'); 
 
+        }
         botao_inserir_transicoes.disabled = true;
         gerarEstadoInicial();
         gerarEstadosAceitacao();

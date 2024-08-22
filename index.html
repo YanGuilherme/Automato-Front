@@ -15,13 +15,16 @@
                 -Fazer testes faceis de comparacao antes de realizar o teste de palavras nos dois
 
     PARA FAZER
-        -Retirar cadeia vazia do AFN
+
         -Adicionar entrada de cadeia vazia nos AFN (tem que tirar ela antes de converter para AFD)
-
-                -
+        -Retirar cadeia vazia do AFN
         -Construir um AFN a partir de uma regex
+        
+        MUDANCAS POS PRIMEIRA APRESENTACAO
+            -Pensar nas paginacoes do sistema
+            -Adicionar máquinas de turing
+            -
 -->
-
 
 
 <!DOCTYPE html>
@@ -42,6 +45,11 @@
     <header>
         <h1>AutomaTop</h1>
     </header>
+    <nav class="menu">
+        <a href="index.html">Inserir 5-upla</a>
+        <a href="regex.html">Inserir ER</a>
+        <a href="turing_machine.html">Máquina de Turing</a>
+    </nav>
     <main class="container_geral">
         <section class="borda_div" id="entrada_dados_automato">
             <h2>Formulário de entrada</h2>
@@ -93,6 +101,10 @@
                 <div class="automatos-container">
                     <h3>Autômatos minimizados</h3>
                     <div class="automatos-list" id="minimized_list"></div>
+                </div>
+                <div class="automatos-container">
+                    <h3>Autômatos gerados por ER</h3>
+                    <div class="automatos-list" id="er_generated_list"></div>
                 </div>
             </div>
         </section>
