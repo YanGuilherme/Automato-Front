@@ -128,10 +128,10 @@ document.addEventListener('DOMContentLoaded', function(){
             } else {
                 console.log(`<strong>Alfabeto inserido ${automatoForm.alfabeto_array}</strong>`);
                 
-                if(automatoForm.tipo === 'AFN'){
-                    automatoForm.alfabeto_array.push('ε'); 
+                // if(automatoForm.tipo === 'AFN'){
+                //     automatoForm.alfabeto_array.push('ε'); 
 
-                }
+                // }
     
                 // lógica para enviar o alfabeto para o backend aqui
     
@@ -185,10 +185,6 @@ document.addEventListener('DOMContentLoaded', function(){
         form_transicoes_container.style.display = 'none';
         transicoes_container.appendChild(transicao_msg);
         
-        if(automatoForm.tipo === 'AFN'){
-            automatoForm.alfabeto_array.pop('ε'); 
-
-        }
         botao_inserir_transicoes.disabled = true;
         gerarEstadoInicial();
         gerarEstadosAceitacao();
@@ -223,54 +219,59 @@ document.addEventListener('DOMContentLoaded', function(){
         return estadosDestino;       
     }   
 
-    function gerarFormularioTransicoes(){
+    function gerarFormularioTransicoes() {
         form_transicoes_container.innerHTML = '';
-
+    
         automatoForm.tipo = select_tipo_automato.value;
-
+    
         automatoForm.estados.forEach(estado => {
             automatoForm.alfabeto_array.forEach(simbolo => {
-                const transicao_div = document.createElement('div');
-                transicao_div.className = 'transicao';
-        
-                // Parágrafo combinado para "Origem:" e "Símbolo:"
-                const origem_simbolo_paragrafo = document.createElement('p');
-                origem_simbolo_paragrafo.innerHTML = `<strong>Origem:</strong> ${estado} <br> <strong>Símbolo:</strong> ${simbolo}`;
-                transicao_div.appendChild(origem_simbolo_paragrafo);
-        
-                // Select para escolha do estado de destino
-                const select = document.createElement('select');
-                select.name = `${estado}_${simbolo}`;
-                select.className = 'transicao_input';
-        
-                if (automatoForm.tipo === 'AFN') {
-                    select.multiple = true;
-                }
-        
-                // Opção vazia para seleção do estado de destino
-                const option_vazia = document.createElement('option');
-                option_vazia.value = '';
-                option_vazia.textContent = 'Selecione o estado de destino';
-                select.appendChild(option_vazia);
-        
-                // Opções para todos os estados como destino
-                automatoForm.estados.forEach(destino => {
-                    const option = document.createElement('option');
-                    option.value = destino;
-                    option.textContent = destino;
-                    select.appendChild(option);
-                });
-        
-                transicao_div.appendChild(select);
-        
-                // Adiciona a div de transição ao container principal
-                form_transicoes_container.appendChild(transicao_div);
-        
-
+                criarTransicao(estado, simbolo);
             });
+    
+            // Adiciona transição para cadeia vazia (ε) apenas se o tipo for AFN
+            if (automatoForm.tipo === 'AFN') {
+                criarTransicao(estado, 'ε');
+            }
         });
-        
-
+    }
+    
+    function criarTransicao(estado, simbolo) {
+        const transicao_div = document.createElement('div');
+        transicao_div.className = 'transicao';
+    
+        // Parágrafo combinado para "Origem:" e "Símbolo:"
+        const origem_simbolo_paragrafo = document.createElement('p');
+        origem_simbolo_paragrafo.innerHTML = `<strong>Origem:</strong> ${estado} <br> <strong>Símbolo:</strong> ${simbolo}`;
+        transicao_div.appendChild(origem_simbolo_paragrafo);
+    
+        // Select para escolha do estado de destino
+        const select = document.createElement('select');
+        select.name = `${estado}_${simbolo}`;
+        select.className = 'transicao_input';
+    
+        if (automatoForm.tipo === 'AFN') {
+            select.multiple = true;
+        }
+    
+        // Opção vazia para seleção do estado de destino
+        const option_vazia = document.createElement('option');
+        option_vazia.value = '';
+        option_vazia.textContent = 'Selecione o estado de destino';
+        select.appendChild(option_vazia);
+    
+        // Opções para todos os estados como destino
+        automatoForm.estados.forEach(destino => {
+            const option = document.createElement('option');
+            option.value = destino;
+            option.textContent = destino;
+            select.appendChild(option);
+        });
+    
+        transicao_div.appendChild(select);
+    
+        // Adiciona a div de transição ao container principal
+        form_transicoes_container.appendChild(transicao_div);
     }
     select_tipo_automato.addEventListener('change', gerarFormularioTransicoes);
 
