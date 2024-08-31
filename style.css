@@ -99,12 +99,17 @@ input, select {
     align-items: center;
 }
 
-.automatos-container {
+.automatos-container{
     margin-bottom: 20px;
     width: 100%;
 }
 
-.automatos-list {
+.maquinas_container{
+    margin-bottom: 20px;
+    width: 80%;
+}
+
+.automatos-list{
     padding: 10px;
     min-height: 100px;
     background-color: #e9ecef;
@@ -112,7 +117,15 @@ input, select {
     border: 1px solid #ccc;
 }
 
-#container_exibicao {
+.maquinas_list{
+    padding: 10px;
+    min-height: 70;
+    background-color: #e9ecef;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+#container_exibicao_maquinas, #container_exibicao {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -162,7 +175,7 @@ input, select {
 
 }
 
-.rotulo_automato{
+.rotulo_automato, .rotulo_maquina{
     font-size: 25px;
 }
 

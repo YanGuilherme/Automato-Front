@@ -1,3 +1,13 @@
+<!--
+    --Fazer o front end
+    --Entender mais sobre maquinas de turing 
+    --Fazer o backend
+    
+
+
+-->
+
+
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -6,13 +16,10 @@
     <title>Máquina de Turing</title>
     <link rel="stylesheet" href="style.css">
     <link rel="shortcut icon" href="images/128px-Gold_coin_icon.png" type="image/png">
-    <script src="scriptForm.js"></script>
-    <script src="scriptPainel.js"></script>
+    <script src="scriptFormMT.js"></script>
+    <script src="scriptPainelMT.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/viz.js/2.1.2/viz.js" integrity="sha512-vnRdmX8ZxbU+IhA2gLhZqXkX1neJISG10xy0iP0WauuClu3AIMknxyDjYHEpEhi8fTZPyOCWgqUCnEafDB/jVQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/viz.js/2.1.2/full.render.js"></script>
-
-
-
 </head>
 <body>
     <header>
@@ -23,5 +30,54 @@
         <a href="regex.html">Inserir ER</a>
         <a href="turing_machine.html">Máquina de Turing</a>
     </nav>
+    <main class="container_geral">
+        <section class="borda_div" id="entrada_MT">
+            <h2>Formulário de entrada</h2>
+            <form id="entrada_form">
+                <button id="btn_reset_MT" type="button" disabled>Reset</button>
+
+                <h3>Escolha o nome do Máquina de Turing</h3>
+                <input type="text" name="entrada_nome_MT" id="entrada_nome_MT" placeholder="Insira o nome da máquina" >
+                <button id="btn_inserir_nome_MT">Escolher</button>
+                <div id="container_nome_MT"></div>
+
+
+                <h3>Digite a quantidade de estados da máquina</h3>
+                <input disabled type="number" name="input_quantidade_estados_MT" id="input_quantidade_estados_MT" placeholder="Insira a quantidade">
+                <button disabled id="btn_inserir_estados_MT">Inserir</button>
+                <div id="container_estados_MT"></div>
+
+                <h3>Digite o alfabeto que será utilizado</h3>
+                <input type="text" name="entrada_alfabeto_MT" id="entrada_alfabeto_MT" placeholder="Insira o alfabeto" disabled>
+                <button id="btn_inserir_alfabeto_MT" type="submit" disabled>Inserir</button>
+                <div id="container_alfabeto_MT"></div>
+
+                <h3>Transições</h3>
+                <div id="transicoes_form_container_MT"></div>
+                <div id="transicoes_container_MT"></div>
+                <button id="btn_inserir_transicoes_MT" type="submit" disabled>Adicionar transições</button>
+
+                <h3>Selecione o estado inicial</h3>
+                <div id="container_estado_inicial_MT"></div>
+
+                <h3>Defina o(s) estado(s) de aceitação</h3>
+                <div id="container_estados_aceitacao_MT"></div>
+
+                <button id="concluir_maquina" type="submit" disabled>Salvar máquina</button>
+                <div id="container_concluido_mt"></div>
+                <button id="outra_maquina" type="submit" disabled>Adicionar outra máquina</button>
+            </form>
+        </section>
+
+        <section class="borda_div" id="exibicao_maquinas">
+            <h2>Exibição das máquinas</h2>
+            <div id="container_exibicao_maquinas">
+                <div class="maquinas_container">
+                    <div class="maquinas_list" id="maq_list"></div>
+                </div>
+            </div>
+        </section>
+
+    </main>
 </body>
 </html>

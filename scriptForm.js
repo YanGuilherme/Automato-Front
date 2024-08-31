@@ -120,20 +120,12 @@ document.addEventListener('DOMContentLoaded', function(){
         if(alfabeto.trim() !== ''){
             automatoForm.alfabeto_array = alfabeto.trim().split(/\s+/);
     
-            // Verificação se todos os símbolos têm apenas um caractere
             const invalidSymbols = automatoForm.alfabeto_array.filter(symbol => symbol.length !== 1);
     
             if (invalidSymbols.length > 0) {
                 alert('Por favor, insira apenas caracteres únicos separados por espaços.');
             } else {
                 console.log(`<strong>Alfabeto inserido ${automatoForm.alfabeto_array}</strong>`);
-                
-                // if(automatoForm.tipo === 'AFN'){
-                //     automatoForm.alfabeto_array.push('ε'); 
-
-                // }
-    
-                // lógica para enviar o alfabeto para o backend aqui
     
                 input_alfabeto.value = '';
     
@@ -297,7 +289,6 @@ document.addEventListener('DOMContentLoaded', function(){
     function gerarEstadoInicial() {
         criarCheckboxes(estado_inicial_container, 'estado_inicial');
     
-        // Marca o primeiro checkbox como padrão e impede desmarcação
         const checkboxes = estado_inicial_container.querySelectorAll('input[type="checkbox"]');
         checkboxes.forEach((cb, index) => {
             if (index === 0) {
@@ -314,14 +305,12 @@ document.addEventListener('DOMContentLoaded', function(){
                         }
                     });
                 } else {
-                    // Se o usuário tentar desmarcar o estado inicial, reverte a ação
                     event.target.checked = true;
                 }
             });
         });
     }
 
-    // Estados de Aceitação
     function gerarEstadosAceitacao() {
         criarCheckboxes(estados_aceitacao_container, 'estado_aceitacao');
         
@@ -338,7 +327,6 @@ document.addEventListener('DOMContentLoaded', function(){
                 }
             }
     
-            // Verifica se há pelo menos um estado de aceitação selecionado
             if (automatoForm.estadosAceitacao.length > 0) {
                 botao_salvar_automato.disabled = false;
             } else {

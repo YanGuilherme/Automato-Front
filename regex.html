@@ -8,6 +8,7 @@
     <link rel="shortcut icon" href="images/128px-Gold_coin_icon.png" type="image/png">
     <script src="scriptForm.js"></script>
     <script src="scriptPainel.js"></script>
+    <script src="scriptRegex.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/viz.js/2.1.2/viz.js" integrity="sha512-vnRdmX8ZxbU+IhA2gLhZqXkX1neJISG10xy0iP0WauuClu3AIMknxyDjYHEpEhi8fTZPyOCWgqUCnEafDB/jVQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/viz.js/2.1.2/full.render.js"></script>
 
@@ -28,8 +29,8 @@
             <h2>Entrada de Expressão Regular</h2>
             <form id="entrada_regex_form">
                 <h3>Digite a expressão regular</h3>
-                <input type="text" name="regex" id="regex" placeholder="Insira a expressão. Exemplo: (a+b)*c">
-                <button type="submit">Gerar autômato</button>
+                <input type="text" name="regex" id="regex" placeholder="Insira a expressão. Exemplo: (a+b)*.c">
+                <button type="submit" id="botao_entrada_regex">Gerar autômato</button>
             </form>
         </section>
         <section class="borda_div" id="exibicao_automato">
@@ -46,10 +47,6 @@
                 <div class="automatos-container">
                     <h3>Autômatos minimizados</h3>
                     <div class="automatos-list" id="minimized_list"></div>
-                </div>
-                <div class="automatos-container">
-                    <h3>Autômatos gerados por ER</h3>
-                    <div class="automatos-list" id="er_generated_list"></div>
                 </div>
             </div>
         </section>

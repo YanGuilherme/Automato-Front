@@ -20,6 +20,7 @@ function exibirAutomatos(automatos) {
     const afn_list = document.getElementById('afn_list');
     const afd_list = document.getElementById('afd_list');
     const minimized_list = document.getElementById('minimized_list');
+    const afnRegex = document.getElementById('er_generated_list');
     afn_list.innerHTML = afd_list.innerHTML = minimized_list.innerHTML = ''; // Limpar todas as listas
 
     automatos.forEach(automato => {
@@ -84,6 +85,8 @@ function exibirAutomatos(automatos) {
             } else {
                 afd_list.appendChild(automato_container);
             }
+        }else if(automato.tipo === 'AFN_ER'){
+            
         }
 
         automato_container.appendChild(botao_equivalencia);
@@ -269,16 +272,6 @@ async function converterAutomato(automato){
     }
 
 }
-
-function parsePairString(pairString) {
-    const regex = /util\.Pair\{first=(.*)second=(.*)\}/;
-    const matches = pairString.match(regex);
-    if (matches) {
-        return { first: matches[1], second: matches[2] };
-    }
-    return null;
-}
-
 
 
 function formatarTransicoesComoTabela(transicoes, automato) {
