@@ -220,6 +220,7 @@ function exibirMaquinas(maquinas) {
             const detalhes_maquina = `
                 <div id="maquina-container-${maquina.id}"></div>
                 <pre><strong>Nome:</strong> ${maquina.nome}</pre>
+                <pre><string>Tipo:</strong> ${maquina.tipo}</pre>
                 <pre style="white-space: pre-wrap;"><strong>Estados <i>Q</i>:</strong> ${Object.keys(maquina.transicoes).join(', ')}</pre>
                 <pre><strong>Alfabeto Σ:</strong> ${maquina.alfabetoFita.join(', ')}</pre>
                 <pre><strong>Transições:</strong></pre>

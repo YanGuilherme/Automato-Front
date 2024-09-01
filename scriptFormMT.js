@@ -30,6 +30,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Variáveis que serão a 8-upla da máquina de Turing
     let maquinaForm = {
         nome_mt: '',
+        tipo: 'MT',
         estados_mt: [],
         alfabeto_mt: [],
         alfabeto_fita_mt: [],
@@ -338,11 +339,12 @@ document.addEventListener('DOMContentLoaded', function() {
         const transicoes_formatadas_mt = mapTransicoes();
         const maquinaTuring = {
             "nome": maquinaForm.nome_mt,
-            "alfabetoFita" : maquinaForm.alfabeto_fita_mt,
+            "tipo": maquinaForm.tipo,
             "x":maquinaForm.x,
             "y":maquinaForm.y,
             "estadoInicial": maquinaForm.estadoInicial_mt,
             "estadosAceitacao": maquinaForm.estadosAceitacao_mt,
+            "estados": maquinaForm.estados,
             "transicoes": transicoes_formatadas_mt
         };
     
@@ -386,8 +388,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const acceptanceCheckboxes = estados_aceitacao_container_mt.querySelectorAll('input[type="checkbox"]');
             acceptanceCheckboxes.forEach(cb => cb.disabled = true);
             
-            // Chama a função para buscar e exibir todos os autômatos após a criação
-            //await buscarMaquinasTuring();
+            await buscarTodasMaquinas();
     
         } catch (error) {
             console.error('Erro ao salvar a máquina:', error);
